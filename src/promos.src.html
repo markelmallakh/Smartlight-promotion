@@ -1,0 +1,1427 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Smart Light Promotions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Noto+Kufi+Arabic:wght@500;600&display=swap">
+<style>
+/*PARALUCENT*/
+/* Layout: presenter bar → pixel-faithful clone of smartlighteg.com (Figma "✅ UI") → promotions as brand modals on top.
+   Tokens are the Figma styles: Primary Navy / Primary Blue / Blue 80 / Blue 160 / Blue 20 / Blue 30 / Tawny / Black. */
+:root{
+  color-scheme: light;
+  --navy:#0C2340;        /* Primary/Primary Navy */
+  --blue:#0072C8;        /* Primary/Primary Blue */
+  --blue-80:#3386D4;     /* Blue/Blue 80 */
+  --blue-160:#003E79;    /* Blue/Blue160 */
+  --blue-20:#CCE1F4;     /* Blue/Blue 20 */
+  --blue-30:#B2D2EF;     /* Blue/Blue 30 */
+  --blue-10:#E5F0FA;
+  --tawny:#D25600;       /* Secondary/Tawny */
+  --black:#12191F;       /* Primary/Black */
+  --green:#1FB03A;
+  --green-10:#E2F6E5;
+  --gray-5:#F1F3F6;
+  --gray-10:#E6E9EE;
+  --gray-line:#E3E7EC;
+  --text:#12191F;
+  --muted:#5D6874;
+  --white:#FFFFFF;
+  --display:"paralucent","Montserrat","Avenir Next",system-ui,sans-serif;
+  --body:"Montserrat","Noto Kufi Arabic","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --gutter:60px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{min-height:100%}
+body{margin:0;background:var(--gray-5);color:var(--text);font-family:var(--body);font-size:14px;line-height:1.4;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid var(--blue-80);outline-offset:2px;border-radius:6px}
+h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;text-wrap:balance;line-height:1.15}
+.num{font-variant-numeric:tabular-nums}
+.wrap{padding-inline:var(--gutter)}
+.cents{font-size:.68em}
+.ico{width:20px;height:20px;flex:none}
+
+/* ===================== PRESENTER BAR (not part of the site) ===================== */
+.presenter{position:sticky;top:env(safe-area-inset-top,0px);z-index:60;background:#060b12;color:#fff;padding-block:10px;padding-inline:16px;border-bottom:2px solid var(--blue)}
+.presenter-inner{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+.presenter-label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue-30);font-weight:700}
+.tabs{display:flex;flex-wrap:wrap;gap:4px;background:#17222f;padding:4px;border-radius:999px}
+.tab{border:0;background:transparent;color:var(--blue-30);padding:8px 14px;border-radius:999px;font-weight:600;font-size:13px;display:flex;align-items:center;gap:8px;transition:background .2s,color .2s}
+.tab .n{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#26354a;font-size:11px;color:#fff}
+.tab:hover{color:#fff}
+.tab[aria-selected="true"]{background:var(--blue);color:#fff}
+.tab[aria-selected="true"] .n{background:#fff;color:var(--blue)}
+.replay{margin-left:auto;border:1px solid #2a3a50;background:transparent;color:#fff;padding:8px 14px;border-radius:999px;font-weight:600;font-size:13px;display:flex;gap:8px;align-items:center}
+.replay:hover{border-color:var(--blue-80)}
+.idea-note{margin:8px 0 0;font-size:12.5px;color:var(--blue-30)}
+.idea-note b{color:#fff}
+
+/* ===================== SITE CLONE ===================== */
+.flash{background:var(--tawny);color:#fff;display:flex;align-items:center;justify-content:center;gap:16px;padding-block:8px;position:relative;flex-wrap:wrap}
+.flash-title{display:flex;align-items:center;gap:8px;font-family:var(--display);font-weight:600;font-size:20px;line-height:1.4}
+.flash-count{display:flex;gap:6px}
+.flash-count span{background:#fff;color:var(--tawny);border-radius:6px;padding:4px 6px;display:flex;align-items:flex-end;gap:4px;font-weight:700;font-size:16px;line-height:1.3}
+.flash-count small{font-size:10px;font-weight:500}
+.flash-cta{position:absolute;right:52px;background:rgba(255,255,255,.3);border-radius:50px;height:32px;padding:0 15px;display:flex;align-items:center;gap:6px;font-weight:500;font-size:15px}
+.topbar{background:var(--black);color:#fff;display:flex;justify-content:space-between;align-items:center;padding-block:10px;gap:16px}
+.topbar .claim{color:var(--blue-30);font-size:12px;font-weight:600;letter-spacing:.4px;text-transform:uppercase}
+.topbar nav{display:flex;gap:24px;font-weight:500;font-size:14px;align-items:center}
+.flag{width:18px;height:12px;border-radius:2px;background:linear-gradient(#ce1126 33%,#fff 33% 66%,#000 66%)}
+.mainhead{background:var(--navy);display:flex;align-items:center;justify-content:space-between;padding-block:16px;gap:16px}
+.mainhead .logo{height:74px;width:auto}
+.head-actions{display:flex;gap:12px;align-items:center}
+.loc{height:52px;border-radius:100px;background:var(--blue-20);color:var(--blue);display:flex;align-items:center;gap:6px;padding:0 18px;font-weight:500;font-size:14px;border:0}
+.circle{width:52px;height:52px;border-radius:50%;background:var(--blue-20);color:var(--blue);display:grid;place-items:center;border:0;position:relative}
+.circle svg{width:26px;height:26px}
+.circle.cart{background:var(--blue);color:#fff}
+.badge{position:absolute;right:-12px;bottom:-4px;min-width:30px;height:30px;padding:0 6px;border-radius:99px;background:var(--tawny);border:3px solid var(--navy);color:#fff;font-weight:600;font-size:13px;display:grid;place-items:center}
+.catbar{background:var(--blue);display:flex;align-items:center;gap:8px;height:54px;overflow-x:auto;scrollbar-width:none}
+.catbar::-webkit-scrollbar{display:none}
+.catbar a{color:#fff;font-weight:600;font-size:13px;letter-spacing:.28px;text-transform:uppercase;white-space:nowrap;padding:0 14px;height:38px;display:flex;align-items:center;border-radius:4px}
+.catbar a+a:not(.all){border-left:1px solid rgba(255,255,255,.35);border-radius:0}
+.catbar a.all{background:var(--blue-160);gap:8px;border-radius:4px}
+
+.hero{display:grid;grid-template-columns:982fr 394fr;gap:16px;padding-block:24px 0}
+.slider{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:982/694;background:#d8e1ea}
+.slide{position:absolute;inset:0;opacity:0;transition:opacity .7s}
+.slide.on{opacity:1}
+.slide img{width:100%;height:100%;object-fit:cover}
+.slide-copy{position:absolute;left:6%;top:50%;transform:translateY(-50%);max-width:46%;display:grid;gap:14px;color:var(--navy)}
+.slide-copy h2{font-size:clamp(22px,3.2vw,44px);text-transform:uppercase;line-height:1.1}
+.slide-copy p{margin:0;font-size:clamp(12px,1.2vw,16px);color:#3a4654}
+.pill-btn{background:var(--blue);color:#fff;border:0;border-radius:100px;padding:0 20px;height:40px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:500;font-size:14px;justify-self:start;transition:background .2s}
+.pill-btn:hover{background:var(--blue-160)}
+.dots{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:#fff;border-radius:99px;padding:6px 12px}
+.dots button{border:0;background:none;padding:0;display:grid;place-items:center}
+.dots i{display:block;width:12px;height:4px;border-radius:4px;background:var(--gray-10)}
+.dots i.on{width:28px;background:var(--navy)}
+.deal{position:relative;border-radius:16px;overflow:hidden;background:#d8e1ea}
+.deal img{width:100%;height:100%;object-fit:cover}
+.deal span{position:absolute;left:16px;bottom:16px;color:#e5141c;font-weight:700;font-size:13px;font-family:var(--display)}
+.deal i{position:absolute;right:14px;bottom:12px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.85);display:grid;place-items:center}
+
+.sec-title{text-align:center;font-size:clamp(22px,2.4vw,32px);color:var(--navy);margin-bottom:28px}
+.cats-sec{background:#fff;padding-block:60px}
+.cats{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:16px;overflow-x:auto}
+.cat{display:grid;gap:10px;justify-items:center;text-align:center}
+.cat-img{width:100%;aspect-ratio:145/116;border-radius:8px;background:var(--gray-5);display:grid;place-items:center;overflow:hidden}
+.cat-img img{width:72%;height:86%;object-fit:contain;mix-blend-mode:multiply}
+.cat h3{font-family:var(--body);font-weight:500;font-size:13px;color:var(--text)}
+
+.feat{padding-block:60px}
+.ptabs{display:flex;justify-content:center;gap:8px;margin:-12px 0 24px}
+.ptabs span{padding:6px 12px;border-radius:99px;background:var(--gray-10);font-size:12px;font-weight:500;color:var(--muted)}
+.ptabs span.on{background:var(--blue);color:#fff}
+.products{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}
+.pcard{background:#fff;border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.pimg{position:relative;aspect-ratio:271/231;background:var(--gray-10);display:grid;place-items:center;max-width:100%}
+.pimg img{width:78%;height:88%;object-fit:contain;mix-blend-mode:multiply}
+.warranty{position:absolute;right:8px;top:8px;background:#fff;border-radius:99px;padding:3px 8px;display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:var(--navy)}
+.warranty svg{width:13px;height:13px;color:var(--blue)}
+.pbody{padding:14px 14px 16px;display:grid;gap:8px}
+.pbody h3{font-family:var(--body);font-weight:500;font-size:13px;color:var(--text);min-height:2.6em}
+.price{color:var(--blue);font-weight:700;font-size:16px}
+.pact{display:flex;gap:8px;align-items:center}
+.pact .pill-btn{flex:1;height:36px;font-size:13px;padding:0 10px}
+.heart{width:36px;height:36px;border-radius:50%;background:var(--gray-5);border:0;display:grid;place-items:center;flex:none}
+.heart svg{width:16px;height:16px}
+
+.statement{text-align:center;font-family:var(--body);font-weight:500;font-size:clamp(18px,2vw,26px);line-height:1.35;color:var(--navy);max-width:760px;margin:0 auto 32px;text-wrap:balance}
+.statement em{font-style:normal;color:var(--blue)}
+.vid-row{display:grid;grid-template-columns:1fr 390px;gap:16px}
+.vid{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:16/7;background:#2a2016}
+.vid img{width:100%;height:100%;object-fit:cover;filter:brightness(.75) saturate(1.1)}
+.play{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px;border-radius:50%;background:var(--blue);display:grid;place-items:center;color:#fff}
+.batten{background:#fff;border-radius:16px;padding:28px;display:flex;flex-direction:column;justify-content:center;gap:10px}
+.batten img{width:64px;height:64px;border-radius:8px;background:var(--gray-5)}
+.batten small{font-size:12px;color:var(--muted);font-weight:500}
+.batten h3{font-family:var(--body);font-weight:500;font-size:28px;color:var(--navy)}
+
+.elegant{background:var(--navy);padding-block:72px;color:#fff}
+.elegant h2{text-align:center;font-size:clamp(22px,2.4vw,30px);margin-bottom:32px}
+.room{position:relative;border-radius:24px;overflow:hidden}
+.room img{width:100%}
+.hot{position:absolute;width:20px;height:20px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 0 0 6px rgba(255,255,255,.35)}
+.hot::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--blue)}
+.hot-card{position:absolute;left:34%;top:9%;background:#fff;color:var(--text);border-radius:10px;padding:8px;display:flex;gap:10px;align-items:center;min-width:220px}
+.hot-card img{width:56px;height:56px;border-radius:6px;background:var(--gray-5);object-fit:contain}
+.hot-card b{display:block;color:var(--blue);font-size:15px}
+.hot-card small{font-size:12px;font-weight:500}
+.hot-card i{margin-left:auto;width:30px;height:30px;border-radius:6px;background:var(--navy);display:grid;place-items:center;color:#fff}
+
+.about{background:var(--blue-160);color:#fff;display:grid;grid-template-columns:1fr 1fr;min-height:520px;overflow:hidden}
+.about-copy{padding-block:72px;display:flex;flex-direction:column;justify-content:center;gap:16px;max-width:560px}
+.about-copy small{color:var(--blue-30);font-weight:600;font-size:12px}
+.about-copy h2{font-size:clamp(24px,2.4vw,32px)}
+.about-copy p{margin:0;color:#d6e4f2;font-size:13px}
+.stats{display:flex;gap:48px;border-top:1px solid rgba(255,255,255,.25);padding-top:24px;margin-top:8px}
+.stats b{display:block;font-family:var(--display);font-size:30px}
+.stats span{font-size:11px;color:#d6e4f2}
+.ghost{border:1px solid #fff;color:#fff;border-radius:99px;padding:8px 16px;font-size:13px;justify-self:start;align-self:flex-start;display:flex;gap:6px;align-items:center}
+.pattern{position:relative}
+.pattern svg{position:absolute;inset:0;width:100%;height:100%}
+
+.brands{background:var(--gray-5);padding-block:64px}
+.brand-row{display:flex;justify-content:center;gap:16px;margin-bottom:28px}
+.brand-row img{width:120px;height:120px;border-radius:10px;background:#fff;object-fit:contain}
+.banner{border-radius:16px;overflow:hidden}
+
+.blog{padding-block:64px;background:#fff}
+.posts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.post img{border-radius:10px;aspect-ratio:459/266;object-fit:cover;width:100%}
+.post .tag{display:inline-block;margin-top:12px;background:#17c3b2;color:#fff;font-size:11px;font-weight:600;padding:2px 6px;border-radius:3px}
+.post .tag.news{background:var(--tawny)}
+.post h3{font-family:var(--body);font-weight:600;font-size:15px;color:var(--navy);margin-top:8px}
+.post small{display:block;color:var(--muted);font-size:12px;margin-top:6px}
+.post a{display:inline-block;color:var(--blue);font-weight:600;font-size:13px;margin-top:8px}
+
+.footer{background:var(--navy);color:#fff;padding-block:40px 0}
+.news{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;margin-bottom:28px}
+.news h2{font-size:22px}
+.news-form{background:#fff;border-radius:10px;padding:6px 6px 6px 16px;display:flex;align-items:center;gap:8px;width:min(440px,100%)}
+.news-form span{flex:1;color:var(--muted);font-size:13px}
+.footer-img{border-radius:16px;overflow:hidden;margin-bottom:36px}
+.fcols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:24px;padding-bottom:36px}
+.fcols h4{margin:0 0 14px;color:var(--blue-30);font-size:12px;font-weight:600}
+.fcols ul{list-style:none;margin:0;padding:0;display:grid;gap:12px;font-size:13px}
+.fcols .contact{display:grid;gap:10px;font-size:12px;color:#d6e4f2}
+.fcols .contact b{color:var(--blue-30);font-weight:600}
+.fcols .contact .logo{height:52px;width:auto;margin-bottom:10px}
+.fbottom{background:var(--black);display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:12px;font-size:11px;color:#9aa6b2;flex-wrap:wrap}
+.pays{display:flex;gap:4px;align-items:center}
+.pays img{height:22px;width:auto;border-radius:3px;background:#fff}
+
+/* ---------- Checkout clone (Figma "Payment") ---------- */
+.co-head{background:#fff;border-bottom:1px solid var(--gray-line);display:flex;align-items:center;justify-content:center;position:relative;padding-block:20px}
+.co-head .logo{height:58px;width:auto}
+.lang{position:absolute;right:var(--gutter);display:flex;gap:6px;align-items:center;background:var(--gray-5);border-radius:99px;padding:8px 12px;font-size:13px;font-weight:500}
+.progress{max-width:1210px;margin:0 auto;padding-block:32px 40px}
+.progress-labels{display:flex;font-size:13px;font-weight:500;color:var(--muted);margin-bottom:8px}
+.progress-labels span{flex:1}
+.progress-labels span:first-child{color:var(--blue)}
+.progress-bar{display:flex;height:8px;border-radius:8px;overflow:hidden}
+.progress-bar i{flex:1;background:var(--blue-160)}
+.progress-bar i+i{background:var(--blue)}
+.co-grid{max-width:1210px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;padding-bottom:72px}
+.co-card{background:#fff;border-radius:16px;box-shadow:0 0 0 1px var(--gray-line),0 4px 14px rgba(12,35,64,.06);padding:24px}
+.co-card h2{font-family:var(--body);font-weight:500;font-size:20px;color:var(--text)}
+.co-card-head{display:flex;justify-content:space-between;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--gray-line);margin-bottom:6px}
+.edit{background:var(--gray-10);border:0;border-radius:99px;padding:8px 32px;font-weight:500}
+.payrow{display:flex;align-items:center;gap:10px;padding-block:22px;border-bottom:1px solid var(--gray-line);font-size:14px}
+.payrow:first-of-type{padding-top:16px}
+.payrow .r{width:16px;height:16px;border-radius:50%;border:1.5px solid #9aa6b2;flex:none}
+.payrow.on .r{border:4.5px solid var(--blue)}
+.payrow .end{margin-left:auto;display:flex;gap:6px;align-items:center}
+.payrow .end img{height:20px;width:auto}
+.field-box{border:1px solid var(--gray-line);border-radius:8px;padding:8px 12px;display:grid;gap:2px;margin-top:10px}
+.field-box small{font-size:11px;color:var(--muted)}
+.field-box span{font-size:14px;font-weight:500}
+.fields-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.chip-green{background:var(--green-10);color:var(--green);font-weight:600;font-size:12px;padding:2px 6px;border-radius:4px}
+.terms{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted);margin-top:22px}
+.terms i{width:16px;height:16px;border-radius:3px;background:var(--blue);display:grid;place-items:center;color:#fff}
+.place{margin-top:16px;width:min(246px,100%);height:50px;border:0;border-radius:99px;background:var(--green);color:#fff;font-weight:600;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px;transition:filter .2s}
+.place:hover{filter:brightness(1.06)}
+.place[disabled]{cursor:wait;filter:saturate(.7)}
+.spinner{width:16px;height:16px;border-radius:50%;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.line{display:grid;grid-template-columns:60px 1fr auto;gap:10px;align-items:center;padding-block:10px}
+.line .th{width:60px;height:60px;border-radius:8px;background:var(--gray-10);display:grid;place-items:center;overflow:hidden}
+.line .th img{width:84%;height:84%;object-fit:contain;mix-blend-mode:multiply}
+.line h3{font-family:var(--body);font-weight:500;font-size:14px}
+.line .meta{display:flex;gap:8px;align-items:center;margin-top:6px;font-size:13px;color:var(--muted)}
+.line .meta span{background:var(--gray-10);padding:1px 6px;border-radius:3px;font-size:12px}
+.line .pr{text-align:right;color:var(--blue);font-weight:600;font-size:17px}
+.line .pr s{display:block;color:var(--muted);font-weight:500;font-size:12px}
+.box-row{border:1px solid var(--gray-line);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px;margin-top:10px;font-size:12px;color:var(--muted)}
+.box-row b{font-weight:500}
+.toggle{margin-left:auto;width:32px;height:18px;border-radius:99px;background:var(--gray-10);position:relative}
+.toggle::after{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.sum{display:flex;justify-content:space-between;padding-block:10px;color:var(--muted);font-size:14px}
+.sum.total{border-top:1px solid var(--gray-line);margin-top:8px;padding-top:18px;color:var(--text);font-weight:700;font-size:19px}
+.gift-box{display:flex;align-items:center;gap:12px;margin-top:10px;border:1.5px dashed var(--green);background:var(--green-10);border-radius:8px;padding:10px 12px;animation:pop .45s cubic-bezier(.2,1.3,.4,1)}
+.gift-box svg{width:28px;height:28px;color:var(--green);flex:none}
+.gift-box small{display:block;font-size:11px;color:var(--muted)}
+.gift-box b{font-size:14px;font-weight:600;color:#127528}
+.expiry{margin-left:auto;display:flex;align-items:center;gap:6px;background:#FDEEE3;color:var(--tawny);font-weight:700;font-size:12.5px;padding:6px 10px;border-radius:99px;white-space:nowrap}
+.expiry svg{width:14px;height:14px;color:var(--tawny)}
+.sum.disc{color:var(--green)}
+.sum.total s{color:var(--muted);font-weight:500;font-size:13px;margin-right:10px}
+.voucher .applied svg{width:14px;height:14px;color:#fff}
+.applied{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#fff;font-weight:600;font-size:12.5px;padding:8px 12px;border-radius:99px;white-space:nowrap}
+.done{display:flex;gap:10px;align-items:center;padding:12px 14px;border-radius:10px;background:var(--green-10);color:#127528;font-weight:600;font-size:13px;margin-bottom:12px}
+.wallet-row{transition:box-shadow .5s,border-color .5s}
+.wallet-row.lit{border-color:var(--green);box-shadow:0 0 0 3px var(--green-10)}
+
+
+/* ---------- Thanks page (Figma "Thanks Page") ---------- */
+.thx-band{background:var(--blue-10);padding-block:36px 110px;text-align:center;display:grid;justify-items:center;gap:10px}
+.thx-band h1{color:var(--green);font-size:clamp(22px,2.4vw,30px);font-family:var(--body);font-weight:600}
+.thx-card{max-width:640px;margin:-80px auto 72px;background:#fff;border-radius:16px;box-shadow:0 0 0 1px var(--gray-line),0 6px 20px rgba(12,35,64,.08);padding:24px;display:grid}
+.thx-h{font-family:var(--body);font-weight:600;font-size:17px;padding-bottom:12px;border-bottom:1px solid var(--gray-line);margin-top:22px}
+.thx-lines{border-bottom:1px solid var(--gray-line);padding-block:6px}
+.thx-sub{font-family:var(--body);font-weight:600;font-size:15px;margin:20px 0 10px}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;font-size:13px;font-weight:500;padding-bottom:16px;border-bottom:1px solid var(--gray-line)}
+.kv small{display:block;font-size:11px;color:var(--muted);font-weight:500;margin-bottom:2px}
+.kv-line{margin:0;font-size:13px;font-weight:500;padding-bottom:16px;border-bottom:1px solid var(--gray-line)}
+.paid{justify-self:end;text-align:right;font-size:12px;color:var(--muted);display:grid;gap:4px}
+.paid span{display:flex;gap:6px;align-items:center;justify-content:flex-end;color:var(--text);font-weight:500}
+.paid img{height:16px;width:auto}
+.cb-banner{position:relative;overflow:hidden;border-radius:14px;background:var(--navy);color:#fff;padding:22px;display:grid;gap:16px;animation:pop .5s cubic-bezier(.2,1.3,.4,1)}
+.cb-rays{position:absolute;right:-180px;top:-180px;width:420px;height:420px;border-radius:50%;background:repeating-conic-gradient(rgba(51,134,212,.25) 0 10deg,transparent 10deg 20deg);animation:spin 30s linear infinite;-webkit-mask-image:radial-gradient(closest-side,#000 20%,transparent 70%);mask-image:radial-gradient(closest-side,#000 20%,transparent 70%)}
+.cb-copy{position:relative;display:grid;gap:6px}
+.cb-tag{justify-self:start;background:var(--tawny);color:#fff;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:99px}
+.cb-copy h2{font-size:clamp(20px,2.4vw,26px)}
+.cb-copy h2 span{color:#FFB066}
+.cb-copy p{margin:0;color:var(--blue-30);font-size:13px;max-width:44ch}
+.cb-btn{position:relative;justify-self:start;height:46px;border:0;border-radius:99px;background:#fff;color:var(--blue);font-weight:700;font-size:14px;padding:0 22px;display:flex;align-items:center;gap:8px;box-shadow:0 8px 20px -6px rgba(0,0,0,.4);transition:transform .15s}
+.cb-btn:hover{transform:translateY(-1px)}
+
+/* ---------- My Account · Wallet (Figma) ---------- */
+.acc{display:grid;grid-template-columns:290px minmax(0,1fr);gap:24px;align-items:start;padding-block:40px 72px}
+.acc-side{background:#fff;border-radius:12px;border-top:6px solid var(--blue);box-shadow:0 0 0 1px var(--gray-line);overflow:hidden}
+.acc-user{padding:20px;border-bottom:1px solid var(--gray-line);display:grid;gap:8px}
+.gold{justify-self:start;background:#12191F;color:#F2C14E;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:.08em}
+.acc-user strong{color:var(--blue-160);font-size:17px;font-weight:600}
+.acc-nav{display:grid;gap:4px;padding:14px;border-bottom:1px solid var(--gray-line)}
+.acc-nav a{display:flex;gap:12px;align-items:center;padding:10px 12px;border-radius:8px;font-size:14px;font-weight:500;color:#3a4654}
+.acc-nav a.on{background:var(--blue-10);color:var(--blue)}
+.acc-help{padding:16px 20px 20px;display:grid;gap:10px;font-size:13px}
+.acc-help .muted{color:#9aa6b2}
+.crumb{font-size:12px;color:var(--text);font-weight:500}
+.crumb span{color:#9aa6b2}
+.acc-main{display:grid;gap:16px}
+.acc-title{display:flex;justify-content:space-between;align-items:center}
+.acc-title h1{font-family:var(--body);font-weight:600;font-size:20px}
+.bal{justify-self:start;display:flex;align-items:center;gap:14px;background:var(--blue-10);border-radius:12px;padding:14px 20px;transition:box-shadow .6s}
+.bal svg{width:40px;height:40px;color:var(--blue)}
+.bal small{display:block;font-size:13px;color:var(--navy);font-weight:500}
+.bal strong{font-family:var(--display);font-size:30px;color:var(--blue);line-height:1.1}
+.bal.lit{box-shadow:0 0 0 3px var(--green),0 10px 30px -8px rgba(31,176,58,.5)}
+.bal-delta{background:var(--green-10);color:var(--green);font-weight:700;font-size:13px;padding:4px 10px;border-radius:99px;opacity:0;transform:translateY(6px);transition:.4s}
+.bal-delta.show{opacity:1;transform:none}
+.acc-card{background:#fff;border-radius:12px;box-shadow:0 0 0 1px var(--gray-line);padding:20px}
+.acc-card h2{font-family:var(--body);font-weight:500;font-size:15px;padding-bottom:12px;border-bottom:1px solid var(--gray-line);margin-bottom:12px}
+.vrow{display:flex;align-items:center;gap:12px;background:var(--blue-10);border-radius:8px;padding:12px 16px;color:var(--blue);margin-top:10px}
+.vrow b{display:block;font-size:13px;font-weight:600}
+.vrow small{font-size:11px;color:var(--muted)}
+.vrow > span{margin-left:auto;font-size:20px}
+.hist{overflow-x:auto}
+.hrow{display:grid;grid-template-columns:120px 130px minmax(200px,1fr) 100px;gap:12px;padding:12px 10px;font-size:12.5px;border-radius:8px;align-items:center;min-width:560px}
+.hrow.head{font-weight:500;color:var(--text);font-size:13px}
+.hrow .up{color:var(--green);font-weight:600}
+.hrow .down{color:#E5141C;font-weight:600}
+.hrow .tot{color:var(--blue);font-weight:600}
+.hrow em{font-style:normal;background:var(--tawny);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;margin-left:6px}
+.hrow.new{background:var(--green-10);animation:flashRow 1.6s ease 2}
+@keyframes flashRow{50%{background:#c8efd0}}
+
+/* ===================== PROMO MODALS ===================== */
+.overlay{position:fixed;inset:0;z-index:80;background:rgba(12,35,64,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:grid;place-items:center;padding:16px;overflow-y:auto;animation:fade .25s ease}
+@keyframes fade{from{opacity:0}}
+@keyframes pop{from{transform:translateY(24px) scale(.94);opacity:0}}
+.modal{position:relative;width:min(880px,100%);background:#fff;color:var(--text);border-radius:24px;overflow:hidden;box-shadow:0 30px 90px -20px rgba(12,35,64,.55);animation:pop .45s cubic-bezier(.2,1.3,.4,1)}
+.x{position:absolute;top:16px;right:16px;z-index:5;width:36px;height:36px;border-radius:50%;border:0;background:var(--gray-5);color:#6b7682;display:grid;place-items:center}
+.x:hover{background:var(--gray-10);color:var(--text)}
+.x.on-dark{background:#fff;color:var(--navy);box-shadow:0 4px 12px rgba(12,35,64,.25)}
+.x.on-dark:hover{background:var(--blue-10);color:var(--navy)}
+.split{display:grid;grid-template-columns:1fr 1.05fr}
+.copy{padding:44px 36px;display:grid;gap:14px;align-content:center}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tawny)}
+.copy h2{font-size:clamp(28px,3.4vw,40px);color:var(--navy)}
+.copy h2 em{font-style:normal;color:var(--blue)}
+.copy p{margin:0;color:var(--muted);font-size:14px;max-width:36ch}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12px;font-weight:600;padding:5px 10px;border-radius:6px;background:var(--blue-10);color:var(--blue)}
+.fine{font-size:11.5px;color:#8a95a1}
+.stage-dark{position:relative;background:radial-gradient(70% 60% at 50% 45%,#16406f,var(--navy) 70%);padding:40px 28px 52px;display:grid;place-items:center;overflow:hidden}
+.stage-dark::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(255,255,255,.025) 0 14px,transparent 14px 28px)}
+
+/* wheel */
+.wheel-stage{position:relative;width:min(370px,100%);aspect-ratio:1/1;max-width:100%}
+.wheel-rim{position:absolute;inset:0;border-radius:50%;background:var(--navy);box-shadow:0 0 0 5px var(--blue),0 0 0 9px rgba(51,134,212,.35),0 20px 50px rgba(0,0,0,.45)}
+.bulb{position:absolute;left:50%;top:50%;width:9px;height:9px;margin:-4.5px;border-radius:50%;background:#fff;box-shadow:0 0 8px 2px rgba(178,210,239,.95);animation:blink 1.2s steps(1) infinite}
+.bulb:nth-child(even){animation-delay:.6s}
+.spinning .bulb{animation-duration:.24s}
+.spinning .bulb:nth-child(even){animation-delay:.12s}
+@keyframes blink{50%{background:#33506f;box-shadow:none}}
+.wheel{position:absolute;inset:6%;border-radius:50%;touch-action:none;cursor:grab;will-change:transform}
+.wheel:active{cursor:grabbing}
+.wheel canvas{width:100%;height:100%;display:block;border-radius:50%}
+.hub{position:absolute;left:50%;top:50%;width:26%;aspect-ratio:1/1;transform:translate(-50%,-50%);border-radius:50%;border:0;background:radial-gradient(circle at 35% 30%,#5aa2e6,var(--blue) 60%,var(--blue-160));color:#fff;font-family:var(--display);font-weight:700;font-size:clamp(14px,3.4vw,19px);letter-spacing:.06em;box-shadow:0 0 0 6px #fff,0 0 0 9px var(--navy),0 8px 24px rgba(0,0,0,.4);z-index:2;transition:transform .15s}
+.hub:not(:disabled):hover{transform:translate(-50%,-50%) scale(1.05)}
+.hub:disabled{cursor:default}
+.pointer{position:absolute;left:50%;top:-10px;width:38px;height:50px;transform:translateX(-50%);transform-origin:50% 14px;z-index:3;filter:drop-shadow(0 4px 8px rgba(0,0,0,.4));will-change:transform}
+.spinning .pointer{filter:drop-shadow(0 4px 8px rgba(0,0,0,.4)) drop-shadow(0 0 10px rgba(255,140,60,.75))}
+.pointer.landed{animation:landed .7s cubic-bezier(.2,1.6,.4,1)}
+@keyframes landed{0%{scale:1}35%{scale:1.3}100%{scale:1}}
+.drag-hint{position:absolute;bottom:16px;left:0;right:0;text-align:center;font-size:12px;font-weight:600;color:var(--blue-30);display:flex;align-items:center;justify-content:center;gap:6px;z-index:1}
+
+/* win voucher (Figma "Available Vouchers" + "Add Voucher") */
+.win{display:grid;gap:14px;animation:pop .5s cubic-bezier(.2,1.3,.4,1)}
+.win .eyebrow{color:var(--green)}
+.win h2{font-size:clamp(26px,3.2vw,36px);color:var(--navy)}
+.win-prize{font-family:var(--display);font-weight:700;font-size:clamp(44px,7vw,64px);line-height:1;color:var(--blue)}
+.voucher{display:flex;align-items:center;gap:12px;background:var(--blue-10);border:1.5px dashed var(--blue-80);border-radius:12px;padding:10px 10px 10px 14px}
+.voucher svg{width:32px;height:32px;color:var(--blue);flex:none}
+.voucher div{flex:1;min-width:0}
+.voucher small{display:block;font-size:11px;color:var(--muted)}
+.voucher code{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:.08em;color:var(--navy)}
+.timer{font-size:12.5px;color:var(--muted)}
+.timer b{color:var(--tawny)}
+.win-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn-blue{height:48px;border:0;border-radius:99px;background:var(--blue);color:#fff;font-weight:600;font-size:15px;padding:0 28px;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn-blue:hover{background:var(--blue-160)}
+.btn-line{height:48px;border:1px solid var(--gray-line);border-radius:99px;background:#fff;color:var(--text);font-weight:600;font-size:14px;padding:0 22px}
+
+/* boxes */
+.boxes-modal{padding:44px 32px 32px;display:grid;gap:22px}
+.boxes-head{text-align:center;display:grid;gap:10px;justify-items:center}
+.boxes-head h2{font-size:clamp(28px,3.4vw,40px);color:var(--navy)}
+.boxes-head h2 em{font-style:normal;color:var(--blue)}
+.boxes-head p{margin:0;color:var(--muted);max-width:46ch}
+.box-stage{position:relative;border-radius:20px;padding:28px 24px 18px;background:radial-gradient(70% 80% at 50% 30%,#16406f,var(--navy) 75%);overflow:hidden}
+.boxes{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;max-width:540px;margin:0 auto}
+.box{position:relative;aspect-ratio:1/1;border:0;background:transparent;padding:0;max-width:100%}
+.box:not(:disabled):hover .gift{animation:wiggle .5s ease}
+.box:disabled{cursor:default}
+@keyframes wiggle{25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}
+.gift{position:absolute;inset:0}
+.gift-body{position:absolute;left:14%;right:14%;bottom:6%;height:56%;border-radius:8px;background:linear-gradient(90deg,transparent 43%,var(--rb) 43%,var(--rb) 57%,transparent 57%),var(--c);box-shadow:inset 0 -10px 0 rgba(0,0,0,.12);display:grid;place-items:center}
+.gift-body span{font-family:var(--display);font-weight:700;font-size:clamp(18px,3.6vw,28px);color:var(--q);background:#fff;width:1.6em;height:1.6em;border-radius:50%;display:grid;place-items:center;box-shadow:0 0 0 3px var(--rb),0 4px 10px rgba(12,35,64,.35)}
+.lid{position:absolute;left:8%;right:8%;top:22%;height:20%;transition:transform .6s cubic-bezier(.3,1.5,.5,1),opacity .6s;z-index:2}
+.lid-top{position:absolute;inset:0;border-radius:7px;background:linear-gradient(90deg,transparent 42%,var(--rb) 42%,var(--rb) 58%,transparent 58%),var(--c2);box-shadow:0 6px 0 rgba(0,0,0,.12)}
+.bow{position:absolute;left:50%;bottom:92%;width:46%;height:70%;transform:translateX(-50%)}
+.bow::before,.bow::after{content:"";position:absolute;bottom:0;width:50%;height:100%;border:6px solid var(--rb);border-radius:50% 50% 10% 50%}
+.bow::before{left:0;transform:rotate(-18deg);transform-origin:right bottom}
+.bow::after{right:0;transform:scaleX(-1) rotate(-18deg);transform-origin:left bottom}
+.beam{position:absolute;left:18%;right:18%;bottom:50%;height:0;background:linear-gradient(0deg,rgba(204,225,244,.9),transparent);clip-path:polygon(18% 100%,82% 100%,100% 0,0 0);transition:height .5s ease .15s;pointer-events:none}
+.prize-tag{position:absolute;left:50%;top:22%;transform:translate(-50%,40%) scale(.3);opacity:0;z-index:3;background:#fff;color:var(--navy);font-family:var(--display);font-weight:700;padding:6px 10px;border-radius:8px;white-space:nowrap;font-size:clamp(12px,2.4vw,15px);transition:transform .5s cubic-bezier(.2,1.6,.4,1) .2s,opacity .3s .2s;box-shadow:0 8px 24px -6px rgba(0,0,0,.5)}
+.box.shake .gift{animation:shake .55s ease}
+@keyframes shake{20%{transform:translateX(-6px) rotate(-4deg)}40%{transform:translateX(6px) rotate(4deg)}60%{transform:translateX(-4px) rotate(-2deg)}80%{transform:translateX(4px) rotate(2deg)}}
+.box.open .lid{transform:translate(34%,-120%) rotate(32deg);opacity:0}
+.box.open .beam{height:90%}
+.box.open .prize-tag{opacity:1;transform:translate(-50%,-30%) scale(1)}
+.box.chosen .prize-tag{background:var(--tawny);color:#fff;font-size:clamp(14px,2.8vw,18px)}
+.box.revealed{opacity:.45}
+.box.revealed .prize-tag{transform:translate(-50%,0) scale(.85)}
+.boxes-foot{text-align:center;color:var(--blue-30);font-size:12px;font-weight:600;margin-top:10px;position:relative}
+.boxes-win{max-width:520px;width:100%;margin:0 auto}
+
+/* lucky order */
+.lucky{position:relative;width:min(500px,100%);background:#fff;border-radius:24px;overflow:hidden;text-align:center;animation:pop .55s cubic-bezier(.2,1.3,.4,1);box-shadow:0 30px 90px -20px rgba(12,35,64,.55)}
+.lucky-top{position:relative;background:var(--navy);color:#fff;padding:36px 24px 30px;overflow:hidden}
+.rays{position:absolute;left:50%;top:60%;width:900px;height:900px;margin:-450px 0 0 -450px;background:repeating-conic-gradient(rgba(51,134,212,.22) 0 10deg,transparent 10deg 20deg);border-radius:50%;animation:spin 26s linear infinite;-webkit-mask-image:radial-gradient(closest-side,#000 15%,transparent 65%);mask-image:radial-gradient(closest-side,#000 15%,transparent 65%)}
+.lucky-top > :not(.rays):not(.x){position:relative}
+.lucky-top .eyebrow{color:var(--blue-30)}
+.lucky-top h2{font-size:clamp(28px,6vw,38px);margin-top:6px}
+.lucky-top h2 em{font-style:normal;color:#ffb066}
+.ticket{margin:18px auto 0;width:min(300px,100%);background:#fff;color:var(--navy);border-radius:14px;padding:14px 20px;position:relative;transform:rotate(-3deg);box-shadow:0 18px 40px -10px rgba(0,0,0,.5);animation:ticket 1s cubic-bezier(.2,1.5,.4,1)}
+@keyframes ticket{from{transform:rotate(-200deg) scale(.2);opacity:0}}
+.ticket::before,.ticket::after{content:"";position:absolute;top:50%;width:22px;height:22px;margin-top:-11px;border-radius:50%;background:var(--navy)}
+.ticket::before{left:-11px}.ticket::after{right:-11px}
+.ticket small{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--tawny)}
+.ticket .amt{font-family:var(--display);font-weight:700;font-size:42px;line-height:1.1;color:var(--blue)}
+.ticket .order-no{font-size:11.5px;font-weight:600;color:var(--muted);border-top:2px dashed var(--gray-line);margin-top:6px;padding-top:6px}
+.lucky-body{padding:24px 28px 26px;display:grid;gap:16px;justify-items:center}
+.lucky-body p{margin:0;color:var(--muted);max-width:38ch}
+.wallet-card{display:flex;align-items:center;gap:14px;background:var(--blue-10);border-radius:12px;padding:12px 18px;text-align:left}
+.wallet-card svg{width:36px;height:36px;color:var(--blue)}
+.wallet-card small{display:block;font-size:12px;color:var(--navy);font-weight:500}
+.wallet-card strong{font-family:var(--display);font-size:26px;color:var(--blue)}
+.wallet-card s{font-size:12px;color:var(--muted);margin-left:6px}
+
+/* campaign popup (backend controlled) */
+.camp{position:relative;width:min(var(--w,480px),100%);border-radius:24px;overflow:hidden;animation:pop .45s cubic-bezier(.2,1.3,.4,1);box-shadow:0 30px 90px -20px rgba(12,35,64,.55)}
+.camp-text{padding:48px 32px 32px;display:grid;gap:14px;text-align:center;justify-items:center}
+.camp-icon{width:84px;height:84px;display:grid;place-items:center}
+.camp-icon svg{width:64px;height:64px}
+.camp-text h2{font-size:clamp(26px,4.4vw,34px)}
+.camp-text p{margin:0;max-width:36ch;font-size:14px;opacity:.85}
+.camp-text .cta{width:100%;height:52px;border:0;border-radius:99px;font-weight:600;font-size:16px;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px}
+.camp-count{display:flex;gap:6px}
+.camp-count span{border-radius:6px;padding:4px 7px;display:flex;align-items:flex-end;gap:3px;font-weight:700;font-size:16px}
+.camp-count small{font-size:10px;font-weight:500}
+.camp-bg{position:relative;background-size:cover;background-position:center;color:#fff}
+.camp-bg::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,35,64,calc(var(--shade) * .55)) 0%,rgba(12,35,64,var(--shade)) 70%)}
+.camp-bg .camp-text{position:relative;padding-top:140px}
+.camp-bg .camp-text p{color:#E5F0FA;opacity:1}
+.seg.seg3{grid-template-columns:repeat(3,1fr)}.seg.seg3 button{font-size:12px;padding:9px 4px}
+.camp-visual{display:block;width:100%;border:0;padding:0;background:none;cursor:pointer}
+.camp-visual img{width:100%;height:auto}
+
+/* admin drawer */
+.admin-toggle{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:70;height:48px;border:0;border-radius:99px;background:var(--navy);color:#fff;font-weight:600;padding:0 20px;display:flex;align-items:center;gap:8px;box-shadow:0 12px 30px -8px rgba(12,35,64,.6)}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(400px,100%);z-index:90;background:#fff;box-shadow:-20px 0 60px -10px rgba(12,35,64,.3);display:flex;flex-direction:column;transform:translateX(105%);transition:transform .35s cubic-bezier(.3,1,.4,1);padding-top:env(safe-area-inset-top,0px)}
+.drawer.open{transform:none}
+.drawer-head{padding:18px 20px;border-bottom:1px solid var(--gray-line);display:flex;align-items:center;gap:10px}
+.drawer-head h2{font-family:var(--body);font-weight:600;font-size:17px;color:var(--navy)}
+.live{font-size:11px;font-weight:600;background:var(--green-10);color:#127528;padding:3px 8px;border-radius:99px}
+.drawer-head .x{position:static;margin-left:auto}
+.drawer-body{flex:1;overflow-y:auto;padding:18px 20px 24px;display:grid;gap:14px;align-content:start}
+.fld{border:1px solid var(--gray-line);border-radius:8px;padding:6px 12px 8px;display:grid;gap:2px;background:#fff}
+.fld:focus-within{border-color:var(--blue)}
+.fld label,.fld > span{font-size:11px;color:var(--muted)}
+.fld input,.fld textarea,.fld select{border:0;padding:0;font:inherit;font-size:14px;font-weight:500;color:var(--text);background:transparent;outline:none;width:100%}
+.fld textarea{resize:vertical;min-height:56px}
+.lbl{font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px;display:block}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--gray-5);padding:4px;border-radius:99px}
+.seg button{border:0;background:transparent;padding:9px;border-radius:99px;font-weight:600;font-size:13px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--blue);color:#fff}
+.swatches{display:flex;gap:10px}
+.sw{width:34px;height:34px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px var(--gray-line)}
+.sw[aria-pressed="true"]{box-shadow:0 0 0 2px var(--blue)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.upload{border:1.5px dashed var(--blue-30);background:var(--blue-10);border-radius:12px;padding:14px;text-align:center;font-size:12.5px;color:var(--navy);display:grid;gap:8px;justify-items:center}
+.upload input{font-size:12px;max-width:100%}
+.link-btn{border:0;background:none;color:var(--blue);font-weight:600;font-size:12.5px;text-decoration:underline}
+.hint{font-size:12px;color:var(--muted);margin:0}
+.drawer-foot{padding:14px 20px calc(14px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--gray-line)}
+.drawer-foot .btn-blue{width:100%}
+
+.launcher{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:70;display:flex;align-items:center;gap:10px;padding:8px 18px 8px 8px;border:0;border-radius:99px;background:var(--blue);color:#fff;font-weight:600;font-size:14px;box-shadow:0 12px 30px -8px rgba(0,114,200,.7);animation:pop .4s cubic-bezier(.2,1.3,.4,1)}
+.launcher i{width:36px;height:36px;border-radius:50%;background:#fff;color:var(--tawny);display:grid;place-items:center;animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-3px) rotate(-8deg)}}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:100;width:100%;height:100%}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:110;background:var(--navy);color:#fff;padding:10px 18px;border-radius:99px;font-weight:600;font-size:13px;animation:pop .3s ease}
+
+/* ===================== Responsive ===================== */
+@media (max-width:1100px){
+  :root{--gutter:24px}
+  .products{grid-template-columns:repeat(5,minmax(200px,1fr));overflow-x:auto;padding-bottom:6px}
+  .cats{grid-template-columns:repeat(8,minmax(110px,1fr));padding-bottom:6px}
+  .vid-row{grid-template-columns:1fr}
+  .about{grid-template-columns:1fr}
+  .pattern{display:none}
+  .fcols{grid-template-columns:1fr 1fr}
+  .co-grid{grid-template-columns:1fr}
+  .acc{grid-template-columns:1fr}
+  .acc-side{display:none}
+  .flash-cta{display:none}
+}
+@media (max-width:760px){
+  :root{--gutter:16px}
+  .topbar nav a:not(:last-child){display:none}
+  .mainhead .logo{height:48px}
+  .loc{display:none}
+  .circle{width:42px;height:42px}
+  .hero{grid-template-columns:1fr}
+  .deal{display:none}
+  .slide-copy{max-width:60%}
+  .posts{grid-template-columns:1fr}
+  .kv{grid-template-columns:1fr}
+  .thx-card{padding:16px}
+  .hot-card{display:none}
+  .split{grid-template-columns:1fr}
+  .copy{padding:40px 22px 24px;text-align:center;justify-items:center}
+  .copy p{margin-inline:auto}
+  .chips,.win-actions{justify-content:center}
+  .voucher{text-align:left}
+  .boxes-modal{padding:44px 16px 20px}
+  .box-stage{padding:22px 12px 14px}
+  .tab .lbl-long{display:none}
+  .replay{margin-left:0}
+  .stats{gap:24px}
+  .flash-title{font-size:16px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+
+<!-- ===================== PRESENTER BAR ===================== -->
+<header class="presenter">
+  <div class="presenter-inner">
+    <span class="presenter-label">Smart Light · promotion concepts</span>
+    <div class="tabs" role="tablist" aria-label="Promotion idea">
+      <button class="tab" role="tab" id="tab-wheel" data-idea="wheel"><span class="n">1</span>Spin<span class="lbl-long">&nbsp;the wheel</span></button>
+      <button class="tab" role="tab" id="tab-boxes" data-idea="boxes"><span class="n">2</span>Mystery<span class="lbl-long">&nbsp;boxes</span></button>
+      <button class="tab" role="tab" id="tab-cashback" data-idea="cashback"><span class="n">3</span>Lucky<span class="lbl-long">&nbsp;cashback</span></button>
+      <button class="tab" role="tab" id="tab-popup" data-idea="popup"><span class="n">4</span>Campaign<span class="lbl-long">&nbsp;popup</span></button>
+    </div>
+    <button class="replay" id="replay" type="button">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></svg>
+      <span id="replay-label">Replay as new visitor</span>
+    </button>
+  </div>
+  <p class="idea-note" id="idea-note"></p>
+</header>
+
+<!-- ===================== HOMEPAGE CLONE ===================== -->
+<div id="site-top">
+  <div class="flash wrap">
+    <div class="flash-title">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M13 5 8 13h4l-1 6 5-8h-4z" fill="#fff"/></svg>
+      FLASH SALE UP TO 70%
+    </div>
+    <div class="flash-count num" id="flash-count"><span><b>2</b><small>Days</small></span><span><b>10</b><small>Hrs</small></span><span><b>33</b><small>Mins</small></span></div>
+    <a class="flash-cta" href="#" onclick="return false">Shop Now <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 6 6 6-6 6"/></svg></a>
+  </div>
+  <div class="topbar wrap">
+    <span class="claim">#1 Choice in LED Exports Across Egypt</span>
+    <nav><a href="#" onclick="return false">About</a><a href="#" onclick="return false">News &amp; Blog</a><a href="#" onclick="return false">Contact Us</a><a href="#" onclick="return false" style="display:flex;gap:6px;align-items:center">تصفح بالعربية <i class="flag"></i></a></nav>
+  </div>
+  <div class="mainhead wrap">
+    <img class="logo" src="assets/logo-white.svg" alt="Smart Light">
+    <div class="head-actions">
+      <button class="loc" type="button">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M2 6h11v10H2zM13 9h4l4 4v3h-8"/><circle cx="6" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>
+        Deliver to Cairo
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <button class="circle" type="button" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+      <button class="circle" type="button" aria-label="Account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></button>
+      <button class="circle cart" id="head-cart" type="button" aria-label="Cart" title="Go to checkout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 4h2.5l2.2 11h10.6L21 7H6.4"/><circle cx="9" cy="19.5" r="1.5"/><circle cx="17" cy="19.5" r="1.5"/></svg><span class="badge num">3</span></button>
+    </div>
+  </div>
+  <nav class="catbar wrap" aria-label="Categories">
+    <a class="all" href="#" onclick="return false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>All Products<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg></a>
+    <a href="#" onclick="return false">LED Lamps</a><a href="#" onclick="return false">LED Spotlights</a><a href="#" onclick="return false">Panel</a><a href="#" onclick="return false">Downlight</a><a href="#" onclick="return false">Ceiling Lights</a><a href="#" onclick="return false">Led Tube</a><a href="#" onclick="return false">Protection Switches</a><a href="#" onclick="return false">More (1)</a>
+  </nav>
+</div>
+
+<div id="view-home">
+  <section class="hero wrap">
+    <div class="slider" id="slider">
+      <div class="slide on"><img src="assets/hero-1.webp" alt="New from Sirage: Frameless Panel"></div>
+      <div class="slide"><img src="assets/hero-2.webp" alt="Sirage LED bulbs">
+        <div class="slide-copy"><h2>Clearer Lighting Better Ambiance</h2><p>Transform your space with elegant lighting that adds comfort and style.</p><button class="pill-btn" type="button">Shop Now</button></div>
+      </div>
+      <div class="dots"><button type="button" data-dir="-1" aria-label="Previous slide"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m15 6-6 6 6 6"/></svg></button><i class="on"></i><i></i><button type="button" data-dir="1" aria-label="Next slide"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 6 6 6-6 6"/></svg></button></div>
+    </div>
+    <a class="deal" href="#" onclick="return false"><img src="assets/deal.webp" alt="Deal and offers"><span>Deal &amp; Offers</span><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#12191F" stroke-width="2"><path d="M7 17 17 7M8 7h9v9"/></svg></i></a>
+  </section>
+
+  <section class="cats-sec wrap" style="margin-top:40px">
+    <h2 class="sec-title">Lighting Solutions for Every Space</h2>
+    <div class="cats" id="cats"></div>
+  </section>
+
+  <section class="feat wrap">
+    <h2 class="sec-title">Featured Products</h2>
+    <div class="ptabs"><span class="on">Top Seller</span><span>New Arrivals</span><span>Recommended</span></div>
+    <div class="products" id="products"></div>
+  </section>
+
+  <section class="wrap" style="padding-block:20px 72px">
+    <p class="statement">Our smart lighting blends automation, voice commands, and efficiency <em>to make your home brighter, easier to manage, and effortlessly stylish.</em></p>
+    <div class="vid-row">
+      <div class="vid"><img src="assets/elegant.webp" alt=""><span class="play"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></span></div>
+      <div class="batten"><img src="assets/batten.webp" alt=""><small>Led Batten Lights Family</small><h3>The Bright Side of Smart Living</h3><button class="pill-btn" type="button">Shop Now</button></div>
+    </div>
+  </section>
+
+  <section class="elegant wrap">
+    <h2>Elegant Lighting<br>Everywhere</h2>
+    <div class="room">
+      <img src="assets/elegant.webp" alt="Living room lit with Sirage ceiling lights">
+      <span class="hot" style="left:12%;top:12%"></span><span class="hot" style="left:26%;top:18%"></span><span class="hot" style="left:72%;top:40%"></span>
+      <div class="hot-card"><img src="assets/diamond.webp" alt=""><div><small>Diamond LED<br>Ceiling Lights</small><b class="num">EGP 309</b></div><i><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M7 17 17 7M8 7h9v9"/></svg></i></div>
+    </div>
+  </section>
+
+  <section class="about wrap">
+    <div class="about-copy">
+      <small>About Smart Light</small>
+      <h2>Built on 25 Years of Lighting Excellence</h2>
+      <p>Smart Light delivers reliable, stylish, and energy-efficient lighting through the trusted Sirage brand, designed to enhance every space.</p>
+      <div class="stats"><div><b>+25</b><span>Years of global<br>experience</span></div><div><b>#1</b><span>LED exporter<br>in Egypt</span></div><div><b>10B+</b><span>Bulbs sold<br>worldwide</span></div></div>
+      <a class="ghost" href="#" onclick="return false">Know More <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="m9 6 6 6-6 6"/></svg></a>
+    </div>
+    <div class="pattern" aria-hidden="true"><canvas id="pattern" style="position:absolute;inset:0;width:100%;height:100%"></canvas></div>
+  </section>
+
+  <section class="brands wrap">
+    <h2 class="sec-title">Brands You Can Trust</h2>
+    <div class="brand-row"><img src="assets/brand-1.webp" alt="Sirage"><img src="assets/brand-2.webp" alt="Partner brand"></div>
+    <div class="banner"><img src="assets/banner.webp" alt="Sirage campaign banner"></div>
+  </section>
+
+  <section class="blog wrap">
+    <h2 class="sec-title">Latest Updates</h2>
+    <div class="posts">
+      <article class="post"><img src="assets/blog-1.webp" alt=""><span class="tag news">News</span><h3>One Team, One Direction | SIRAGE Employee Day 2026</h3><small>August 20, 2026 · 1 min reading</small><a href="#" onclick="return false">Explore Blogs ›</a></article>
+      <article class="post"><img src="assets/blog-2.webp" alt=""><span class="tag">Blogs</span><h3>Distribution of annual rewards to our valued business partners, traders, and distributors.</h3><small>October 27, 2025 · 1 min reading</small><a href="#" onclick="return false">Explore Blogs ›</a></article>
+      <article class="post"><img src="assets/blog-3.webp" alt=""><span class="tag">Blogs</span><h3>SMART LIGHT (Sirage) Company’s contribution to JESUITS School’s annual celebration</h3><small>October 27, 2025 · 1 min reading</small><a href="#" onclick="return false">Explore Blogs ›</a></article>
+    </div>
+  </section>
+
+</div>
+
+<!-- ===================== THANKS PAGE (Figma "Thanks Page") ===================== -->
+<div id="view-thanks" hidden>
+  <div class="thx-band wrap">
+    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#1FB03A" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="m7.5 12.5 3 3 6-6.5" stroke-width="2"/></svg>
+    <h1>Order Placed Successfully</h1>
+  </div>
+  <div class="wrap">
+    <div class="thx-card">
+      <div class="cb-banner" id="cb-banner">
+        <div class="cb-rays" aria-hidden="true"></div>
+        <div class="cb-copy">
+          <span class="cb-tag">Lucky order</span>
+          <h2>Your <span class="num" id="thx-cb"></span> is back in your wallet</h2>
+          <p>We refunded this whole order as cashback. Spend it on anything, any time in the next 60 days.</p>
+        </div>
+        <button class="cb-btn" id="go-wallet" type="button"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M16 13h2M3 10h18"/></svg> Check my wallet balance</button>
+      </div>
+      <h2 class="thx-h">Order #SL-40817</h2>
+      <div id="thx-lines" class="thx-lines"></div>
+      <h3 class="thx-sub">Personal Info</h3>
+      <div class="kv"><div><small>First Name</small>Mark</div><div><small>Last Name</small>Amir</div><div><small>Email Address</small>mark.amir@mitchdesigns.com</div><div><small>Mobile Number</small>+20 01001234567</div></div>
+      <h3 class="thx-sub">Shipping Date &amp; Time</h3>
+      <p class="kv-line">16 Oct 2026 | 05:15 pm – 5:45 pm</p>
+      <h3 class="thx-sub">Shipping Info</h3>
+      <div class="kv"><div><small>City</small>Cairo</div><div><small>Address</small>14 Abbas el akad street above Total station</div><div><small>Type</small>Apartment</div><div><small>Floor · No.</small>3 · 15</div></div>
+      <div id="thx-sum" style="margin-top:14px"></div>
+      <div class="paid">Payment Method <span><img src="assets/pay-mastercard.png" alt="Mastercard"> **** 8963</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MY ACCOUNT · WALLET (Figma "My Account - Wallet") ===================== -->
+<div id="view-wallet" hidden>
+  <div class="wrap acc">
+    <aside class="acc-side">
+      <div class="acc-user"><span class="gold">GOLD</span><strong>Mark Amir</strong></div>
+      <nav class="acc-nav">
+        <a><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 9h10M7 13h6"/></svg>Overview</a>
+        <a><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h2.5l2.2 11h10.6L21 7H6.4"/><circle cx="9" cy="19.5" r="1.5"/><circle cx="17" cy="19.5" r="1.5"/></svg>Orders</a>
+        <a><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 20s-7-4.4-9-9a4.8 4.8 0 0 1 9-3 4.8 4.8 0 0 1 9 3c-2 4.6-9 9-9 9Z"/></svg>Favorites</a>
+        <a><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s7-6 7-11a7 7 0 0 0-14 0c0 5 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>Addresses</a>
+        <a class="on"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M16 13h2M3 10h18"/></svg> Wallet</a>
+        <a><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m12 3 2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg>Points</a>
+        <a><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Profile</a>
+      </nav>
+      <div class="acc-help"><b>Need Help?</b><span>FAQs</span><span>Contact Us</span><span class="muted">Logout</span></div>
+    </aside>
+    <main class="acc-main">
+      <div class="crumb">Home › <span>My Wallet</span></div>
+      <div class="acc-title"><h1>My Wallet</h1><button class="pill-btn" type="button">+ Add Voucher</button></div>
+      <div class="bal" id="bal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M16 13h2M3 10h18"/></svg>
+        <div><small>Wallet Balance</small><strong class="num" id="bal-amt">EGP 40</strong></div>
+        <span class="bal-delta num" id="bal-delta"></span>
+      </div>
+      <section class="acc-card">
+        <h2>Available Vouchers</h2>
+        <div class="vrow"><svg class="ico" style="width:28px;height:28px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4.5 9.2 9.2 4.5a1.6 1.6 0 0 0 2.3 2.3l7.7 7.7a1.6 1.6 0 0 0-2.3 2.3l-4.7 4.7a1.6 1.6 0 0 0-2.3-2.3L2.2 11.5a1.6 1.6 0 0 0 2.3-2.3Z"/></svg><div><b>100 EGP Discount</b><small>Valid till 20 Nov 2026</small></div><span>+</span></div>
+        <div class="vrow"><svg class="ico" style="width:28px;height:28px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4.5 9.2 9.2 4.5a1.6 1.6 0 0 0 2.3 2.3l7.7 7.7a1.6 1.6 0 0 0-2.3 2.3l-4.7 4.7a1.6 1.6 0 0 0-2.3-2.3L2.2 11.5a1.6 1.6 0 0 0 2.3-2.3Z"/></svg><div><b>Free Shipping</b><small>Valid till 30 Nov 2026</small></div><span>+</span></div>
+      </section>
+      <section class="acc-card">
+        <h2>Wallet History</h2>
+        <div class="hist">
+          <div class="hrow head"><span>Value</span><span>Date</span><span>Reason</span><span>Total</span></div>
+          <div class="hrow new" id="hist-new"><span class="up num" id="hist-amt"></span><span>Oct 14, 2026</span><span>Lucky order cashback · #SL-40817 <em>New</em></span><span class="tot num" id="hist-tot"></span></div>
+          <div class="hrow"><span class="down num">↓ EGP 150</span><span>Sep 28, 2026</span><span>Order #SL-39902</span><span class="tot num">EGP 40</span></div>
+          <div class="hrow"><span class="up num">↑ EGP 100</span><span>Sep 02, 2026</span><span>Voucher #8469353</span><span class="tot num">EGP 190</span></div>
+          <div class="hrow"><span class="down num">↓ EGP 120</span><span>Aug 15, 2026</span><span>Order #SL-38411</span><span class="tot num">EGP 90</span></div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<footer class="footer" id="site-footer">
+    <div class="wrap">
+      <div class="news"><h2>Subscribe to our newsletter</h2><div class="news-form"><span>Enter your email address</span><button class="pill-btn" type="button">Shop Now</button></div></div>
+      <div class="footer-img"><img src="assets/footer.webp" alt="Lighting Every Space, Powering Every Place"></div>
+      <div class="fcols">
+        <div class="contact"><img class="logo" src="assets/logo-white.svg" alt="Smart Light"><b>Phone number</b><span>+20 103 058 2233</span><b>E-mail</b><span>info@smartlighteg.com</span><b>Head Office</b><span>7 Abdel Hamed Awad Street, Makram Ebeid, Nasr City, Cairo, Egypt</span></div>
+        <div><h4>Categories</h4><ul><li>LED Lamps</li><li>Panel</li><li>Bulkhead</li><li>3Colours</li><li>Led Tube</li><li>Protection Switches</li><li>Cables</li></ul></div>
+        <div><h4>Company</h4><ul><li>Home</li><li>About</li><li>Careers</li></ul></div>
+        <div><h4>Support</h4><ul><li>FAQs</li><li>Contact Us</li><li>Terms &amp; Conditions</li><li>Privacy Policy</li><li>Return And Exchange Policy</li></ul></div>
+      </div>
+    </div>
+    <div class="fbottom wrap"><span>© 2026 Smart light • All Rights Reserved</span><span class="pays" id="pays"></span><span>Web design &amp; development by MitchDesigns</span></div>
+</footer>
+
+<!-- ===================== CHECKOUT CLONE (Figma "Payment") ===================== -->
+<div id="view-checkout" hidden>
+  <div class="co-head wrap"><img class="logo" src="assets/logo-navy.svg" alt="Smart Light"><span class="lang">العربية <i class="flag"></i></span></div>
+  <div class="wrap">
+    <div class="progress"><div class="progress-labels"><span>Personal Info</span><span>Pay</span></div><div class="progress-bar"><i></i><i></i></div></div>
+    <div class="co-grid">
+      <div class="co-card">
+        <div id="done" class="done" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Order #SL-40817 confirmed. We'll message you when it ships.</div>
+        <h2>Choose Payment Method</h2>
+        <div class="payrow on"><span class="r"></span>Credit Card<span class="end"><img src="assets/pay-mastercard.png" alt="Mastercard"><img src="assets/pay-visa.png" alt="Visa"></span></div>
+        <div class="field-box"><small>Card Number*</small><span class="num">5642 3652 1556 8963</span></div>
+        <div class="field-box"><small>Name on Card*</small><span>Mark Amir</span></div>
+        <div class="fields-2"><div class="field-box"><small>Exp*</small><span class="num">06/27</span></div><div class="field-box"><small>CVV*</small><span>•••</span></div></div>
+        <div class="payrow" style="margin-top:8px"><span class="r"></span>Cash On Delivery<span class="end"><img src="assets/pay-cash-on-delivery.png" alt=""></span></div>
+        <div class="payrow"><span class="r"></span>Valu<span class="end"><span class="chip-green" style="background:#fdeee3;color:var(--tawny)">Installments</span></span></div>
+        <div class="payrow"><span class="r"></span>Wallet Balance <span class="chip-green num" id="pay-wallet">EGP 40.00</span><span class="end"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M16 13h2M3 10h18"/></svg></span></div>
+        <div class="terms"><i><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><path d="M20 6 9 17l-5-5"/></svg></i>Accept Terms &amp; Conditions</div>
+        <button class="place" id="place" type="button">Place Order <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 6 6 6-6 6"/></svg></button>
+        <p class="hint" id="co-hint" style="margin-top:10px">Presenter mode: this order is always a lucky one.</p>
+      </div>
+      <div class="co-card">
+        <div class="co-card-head"><h2>My Cart</h2><button class="edit" type="button">Edit</button></div>
+        <div id="lines"></div>
+        <div class="box-row"><div><small style="display:block;font-size:11px">Add Note</small>Leave a comment on your order</div><svg style="margin-left:auto" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0072C8" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></div>
+        <div class="box-row wallet-row" id="wallet-row"><svg class="ico" style="color:var(--blue)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M16 13h2M3 10h18"/></svg><b>Use Wallet Balance</b><span class="chip-green num" id="cart-wallet">40 EGP</span><span class="toggle"></span></div>
+        <div id="gift-slot"></div>
+        <div id="co-sum" style="margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+  <footer class="footer" style="padding-top:36px">
+    <div class="wrap" style="display:grid;place-items:center;padding-bottom:36px"><img src="assets/logo-white.svg" alt="Smart Light" style="height:60px;width:auto"></div>
+    <div class="fbottom wrap"><span>© 2026 Smart light • All Rights Reserved</span><span class="pays"><img src="assets/pay-mastercard.png" alt=""><img src="assets/pay-visa.png" alt=""><img src="assets/pay-cash-on-delivery.png" alt=""></span><span>Web design &amp; development by MitchDesigns</span></div>
+  </footer>
+</div>
+
+<div id="layer"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<!-- ===================== ADMIN DRAWER (idea 4) ===================== -->
+<button class="admin-toggle" id="admin-toggle" type="button" hidden>
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+  Popup settings
+</button>
+<aside class="drawer" id="drawer" aria-label="Popup settings">
+  <div class="drawer-head">
+    <h2>Homepage popup</h2><span class="live">Live preview</span>
+    <button class="x" id="drawer-close" type="button" aria-label="Close settings"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+  <div class="drawer-body">
+    <p class="hint">This stands in for the dashboard panel the marketing team would use. Every change updates the popup live.</p>
+    <div><span class="lbl">Popup type</span>
+      <div class="seg seg3" id="f-type"><button type="button" data-v="text">Text &amp; button</button><button type="button" data-v="image">Image background</button><button type="button" data-v="visual">Full visual</button></div>
+    </div>
+    <div id="text-fields" style="display:grid;gap:12px">
+      <div class="fld"><label for="f-eyebrow">Small label</label><input type="text" id="f-eyebrow"></div>
+      <div class="fld"><label for="f-title">Headline</label><input type="text" id="f-title"></div>
+      <div class="fld"><label for="f-body">Body text</label><textarea id="f-body"></textarea></div>
+      <div class="two">
+        <div class="fld"><label for="f-btn">Button label</label><input type="text" id="f-btn"></div>
+        <div class="fld"><label for="f-link">Button link</label><input type="text" id="f-link"></div>
+      </div>
+      <div class="two">
+        <div class="fld"><label for="f-icon">Icon</label><select id="f-icon"><option value="flash">Flash sale</option><option value="voucher">Voucher</option><option value="truck">Delivery</option><option value="bulb">New product</option></select></div>
+        <div class="fld"><label for="f-count">Countdown</label><select id="f-count"><option value="on">Show</option><option value="off">Hide</option></select></div>
+      </div>
+      <div id="bg-fields" style="display:grid;gap:12px">
+        <div class="upload">
+          <span>Background photo for behind the text. Without one, the "Elegant Lighting" room photo is used.</span>
+          <input type="file" id="f-bg" accept="image/*">
+          <button class="link-btn" id="f-bg-clear" type="button">Use the sample photo</button>
+        </div>
+        <div class="fld"><label for="f-shade">Overlay darkness</label><select id="f-shade"><option value="0.35">Light</option><option value="0.6">Medium</option><option value="0.85">Strong</option></select></div>
+      </div>
+      <div id="theme-field"><span class="lbl">Colour theme</span>
+        <div class="swatches" id="f-theme">
+          <button class="sw" type="button" data-v="light" aria-label="White" style="background:#fff"></button>
+          <button class="sw" type="button" data-v="navy" aria-label="Navy" style="background:#0C2340"></button>
+          <button class="sw" type="button" data-v="blue" aria-label="Blue" style="background:#0072C8"></button>
+          <button class="sw" type="button" data-v="tawny" aria-label="Tawny" style="background:#D25600"></button>
+        </div>
+      </div>
+    </div>
+    <div id="visual-fields" style="display:grid;gap:12px" hidden>
+      <div class="upload">
+        <span>Upload the creative team's artwork (JPG, PNG or GIF). Without one, the current "Frameless Panel" banner is used.</span>
+        <input type="file" id="f-img" accept="image/*">
+        <button class="link-btn" id="f-img-clear" type="button">Use the site banner instead</button>
+      </div>
+      <div class="fld"><label for="f-vlink">Click-through link</label><input type="text" id="f-vlink"></div>
+    </div>
+    <div class="two">
+      <div class="fld"><label for="f-delay">Show after</label><select id="f-delay"><option value="0">Immediately</option><option value="1">1 second</option><option value="3">3 seconds</option><option value="8">8 seconds</option></select></div>
+      <div class="fld"><label for="f-freq">Frequency</label><select id="f-freq"><option>Once per visitor</option><option>Once a day</option><option>Every visit</option></select></div>
+    </div>
+    <div class="two">
+      <div class="fld"><label for="f-aud">Audience</label><select id="f-aud"><option>Everyone</option><option>New visitors</option><option>Logged-in customers</option></select></div>
+      <div class="fld"><label for="f-dev">Devices</label><select id="f-dev"><option>All devices</option><option>Mobile only</option><option>Desktop only</option></select></div>
+    </div>
+    <div class="two">
+      <div class="fld"><label for="f-start">Starts</label><input type="text" id="f-start" value="27 Nov 2026, 00:00"></div>
+      <div class="fld"><label for="f-end">Ends</label><input type="text" id="f-end" value="30 Nov 2026, 23:59"></div>
+    </div>
+  </div>
+  <div class="drawer-foot"><button class="btn-blue" id="f-preview" type="button">Show popup</button></div>
+</aside>
+
+<script>
+(() => {
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const store = {
+  get(k, d){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+const egp = (n, cents = true) => `EGP ${Math.round(n).toLocaleString("en-US")}${cents ? '<span class="cents">.00</span>' : ""}`;
+const egpPlain = n => `EGP ${Math.round(n).toLocaleString("en-US")}`;
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const X_ICON = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>`;
+const TICKET = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4.5 9.2 9.2 4.5a1.6 1.6 0 0 0 2.3 2.3l7.7 7.7a1.6 1.6 0 0 0-2.3 2.3l-4.7 4.7a1.6 1.6 0 0 0-2.3-2.3L2.2 11.5a1.6 1.6 0 0 0 2.3-2.3Z"/><path d="m10 13 4-4" stroke-dasharray="2 2"/></svg>`;
+
+/* ---------- Site data (from smartlighteg.com) ---------- */
+const CATS = ["LED Lamps","Led Tube","Downlight","Ceiling Lights","Panel","LED Spotlights","Industrial & Commercial Lighting","3Colours"];
+$("#cats").innerHTML = CATS.map((c,i) => `<a class="cat" href="#" onclick="return false"><span class="cat-img"><img src="assets/cat-${i+1}.webp" alt=""></span><h3>${c}</h3></a>`).join("");
+const PRODUCTS = [
+  { name:"UFO LED Bulbs", price:325, w:"4 Years", cta:"Select Options" },
+  { name:"Voltage Protection Plug", price:850, w:"3 Years", cta:"Add to Cart" },
+  { name:"Voltage Protector", price:1081, w:"3 Years", cta:"Select Options" },
+  { name:"Bulkhead LED Lights Motion Sensor", price:393, w:"3 Years", cta:"Select Options" },
+  { name:"LED Classic Bulbs", price:123, w:"4 Years", cta:"Select Options" },
+];
+const SHIELD = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z"/><path d="m8.5 12 2.5 2.5 4.5-5" stroke="#fff" stroke-width="2" fill="none"/></svg>`;
+const HEART = `<svg viewBox="0 0 24 24" fill="none" stroke="#12191F" stroke-width="1.8"><path d="M12 20s-7-4.4-9-9a4.8 4.8 0 0 1 9-3 4.8 4.8 0 0 1 9 3c-2 4.6-9 9-9 9Z"/></svg>`;
+$("#products").innerHTML = PRODUCTS.map((p,i) => `
+  <article class="pcard"><div class="pimg"><img src="assets/prod-${i+1}.webp" alt="${p.name}"><span class="warranty">${SHIELD}${p.w}</span></div>
+  <div class="pbody"><h3>${p.name}</h3><span class="price num">${egp(p.price)}</span>
+  <div class="pact"><button class="pill-btn" type="button">${p.cta === "Add to Cart" ? "+" : "›"} ${p.cta}</button><button class="heart" type="button" aria-label="Add to favourites">${HEART}</button></div></div></article>`).join("");
+$("#pays").innerHTML = ["mastercard.png","visa.png","wePay.webp","etisalat.webp","vodafone.webp","orange.webp","meeza.webp","cash-on-delivery.png"].map(f => `<img src="assets/pay-${f}" alt="">`).join("");
+
+// checkout cart (real products)
+const CART = [ { i:0, qty:2, color:"White" }, { i:2, qty:1, color:"Grey" }, { i:4, qty:4, color:"Warm" } ];
+const SHIP = 30;
+const ITEMS_TOTAL = CART.reduce((s,c) => s + PRODUCTS[c.i].price * c.qty, 0);
+const ORDER_TOTAL = ITEMS_TOTAL + SHIP;
+
+/* ---------- Won gift: applied automatically at checkout ---------- */
+let gift = null;            // { p: prize, expires: ms timestamp }
+let luckyOrder = false;
+function totals(){
+  let disc = 0, label = "";
+  if (gift){
+    const r = gift.p.rule;
+    if (r.t === "pct"){ disc = Math.round(ITEMS_TOTAL * r.v / 100); label = `Discount ${r.v}%`; }
+    if (r.t === "fixed"){ disc = r.v; label = "Discount"; }
+    if (r.t === "ship"){ disc = SHIP; label = "Free shipping"; }
+  }
+  return { items: ITEMS_TOTAL, ship: SHIP, disc, label, total: ITEMS_TOTAL + SHIP - disc };
+}
+const CLOCK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`;
+function fmtLeft(){
+  if (!gift) return "";
+  const left = Math.max(0, Math.floor((gift.expires - Date.now())/1000));
+  const h = Math.floor(left/3600), m = Math.floor(left%3600/60), s = left%60;
+  return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+}
+setInterval(() => { const v = fmtLeft(); $$("[data-expiry]").forEach(el => el.textContent = v); }, 1000);
+function sumRows(withCashback){
+  const t = totals();
+  return `<div class="sum"><span>Subtotal</span><span class="num">${egp(t.items)}</span></div>
+    <div class="sum"><span>Shipping Fees</span><span class="num">${egp(t.ship)}</span></div>
+    ${t.disc ? `<div class="sum disc"><span>${t.label}</span><span class="num">-${egp(t.disc)}</span></div>` : ""}
+    ${withCashback ? `<div class="sum disc"><span>Cashback to wallet</span><span class="num">+${egp(t.total)}</span></div>` : ""}
+    <div class="sum total"><span>Sub Total</span><span class="num">${t.disc ? `<s>${egpPlain(t.items + t.ship)}</s>` : ""}${egp(t.total)}</span></div>`;
+}
+function renderTotals(){
+  $("#co-sum").innerHTML = sumRows(false);
+  $("#thx-sum").innerHTML = sumRows(luckyOrder);
+  $("#gift-slot").innerHTML = gift ? `<div class="gift-box">${TICKET}<div><small>Welcome gift · ${gift.p.code} · applied automatically</small><b>${gift.p.title} applied</b></div><span class="expiry" title="Time left to use this gift">${CLOCK}<span class="num" data-expiry>${fmtLeft()}</span></span></div>` : "";
+  $("#cb-banner").hidden = !luckyOrder;
+  $("#co-hint").hidden = idea !== "cashback";
+}
+$("#head-cart").addEventListener("click", () => { resetCheckout(); showView("checkout"); });
+function applyGift(p){ if (!gift || gift.p !== p) gift = { p, expires: Date.now() + 48*3600*1000 }; renderTotals(); }
+const LINES_HTML = CART.map(c => { const p = PRODUCTS[c.i]; return `
+  <div class="line"><span class="th"><img src="assets/prod-${c.i+1}.webp" alt=""></span>
+  <div><h3>${p.name}</h3><div class="meta"><span>${c.color}</span>X ${c.qty}</div></div>
+  <div class="pr num">${egp(p.price*c.qty)}<s>${egpPlain(Math.round(p.price*c.qty*1.15))}.00</s></div></div>`; }).join("");
+$("#lines").innerHTML = LINES_HTML;
+$("#thx-lines").innerHTML = LINES_HTML;
+$("#thx-cb").textContent = egpPlain(ORDER_TOTAL);
+$("#hist-amt").textContent = "↑ " + egpPlain(ORDER_TOTAL);
+
+// page views: home (default), checkout, thanks, wallet
+const VIEWS = ["home","checkout","thanks","wallet"];
+function showView(v){
+  VIEWS.forEach(n => $("#view-" + n).hidden = n !== v);
+  $("#site-top").hidden = $("#site-footer").hidden = v === "checkout";
+  scrollTo({top:0, behavior:"auto"});
+}
+
+// hero slider
+let slideIdx = 0, slideTimer;
+const slides = $$(".slide"), dots = $$(".dots i");
+function goSlide(n){ slideIdx = (n + slides.length) % slides.length; slides.forEach((s,i) => s.classList.toggle("on", i === slideIdx)); dots.forEach((d,i) => d.classList.toggle("on", i === slideIdx)); }
+$$(".dots button").forEach(b => b.addEventListener("click", () => { goSlide(slideIdx + +b.dataset.dir); restartSlides(); }));
+function restartSlides(){ clearInterval(slideTimer); if (!reduced) slideTimer = setInterval(() => goSlide(slideIdx + 1), 5000); }
+restartSlides();
+
+// flash sale countdown
+let flashLeft = (2*24 + 10)*3600 + 33*60;
+setInterval(() => { flashLeft--; const d = Math.floor(flashLeft/86400), h = Math.floor(flashLeft%86400/3600), m = Math.floor(flashLeft%3600/60);
+  const b = $$("#flash-count b"); b[0].textContent = d; b[1].textContent = h; b[2].textContent = String(m).padStart(2,"0"); }, 1000);
+
+// Sirage-style maze pattern for the About section (drawn, since the brand pattern is artwork)
+function drawPattern(){
+  const c = $("#pattern"); if (!c || !c.clientWidth) return;
+  const d = devicePixelRatio || 1, W = c.clientWidth, H = c.clientHeight;
+  c.width = W*d; c.height = H*d; const x = c.getContext("2d"); x.scale(d,d);
+  x.translate(W*0.55, H*0.5); x.rotate(Math.PI/4);
+  x.strokeStyle = "#0072C8"; x.lineWidth = 34; x.lineCap = "square";
+  const s = 70;
+  for (let r = 1; r <= 6; r++){
+    x.beginPath(); const a = r*s;
+    x.moveTo(-a, -a + (r%2 ? s : 0)); x.lineTo(-a, a); x.lineTo(a, a); x.lineTo(a, -a); x.lineTo(-a + (r%2 ? 0 : s), -a);
+    x.stroke();
+  }
+  x.fillStyle = "#0072C8"; x.fillRect(-s/2, -s/2, s, s);
+}
+drawPattern(); addEventListener("resize", drawPattern);
+
+/* ---------- Prizes (shared by wheel + boxes) ---------- */
+const PRIZES = [
+  { short:"10% OFF",  l1:"10%",  l2:"OFF",      title:"10% off",       code:"SIRAGE10", rule:{t:"pct",v:10}, desc:"Off your whole order.",               bg:"#0072C8", fg:"#FFFFFF" },
+  { short:"5% OFF",   l1:"5%",   l2:"OFF",      title:"5% off",        code:"SIRAGE5", rule:{t:"pct",v:5},  desc:"Off your whole order.",               bg:"#CCE1F4", fg:"#0C2340" },
+  { short:"FREE SHIP",l1:"FREE", l2:"SHIPPING", title:"Free shipping", code:"FREESHIP", rule:{t:"ship"}, desc:"Delivered free anywhere in Egypt.",   bg:"#0C2340", fg:"#FFFFFF" },
+  { short:"100 EGP",  l1:"100",  l2:"EGP",      title:"EGP 100 off",   code:"LIGHT100", rule:{t:"fixed",v:100}, desc:"On orders above EGP 1,000.",          bg:"#D25600", fg:"#FFFFFF" },
+  { short:"15% OFF",  l1:"15%",  l2:"OFF",      title:"15% off",       code:"SIRAGE15", rule:{t:"pct",v:15}, desc:"Our biggest prize, on your whole order.", bg:"#FFFFFF", fg:"#0072C8" },
+];
+
+/* ---------- Confetti ---------- */
+const cv = $("#confetti"), cx = cv.getContext("2d");
+let parts = [], confettiRunning = false;
+function sizeCanvas(){ const d = devicePixelRatio || 1; cv.width = innerWidth * d; cv.height = innerHeight * d; cx.setTransform(d,0,0,d,0,0); }
+sizeCanvas(); addEventListener("resize", sizeCanvas);
+function confetti(x = innerWidth/2, y = innerHeight/2.4, n = 160){
+  if (reduced) return;
+  const cols = ["#0072C8","#3386D4","#CCE1F4","#D25600","#0C2340","#FFFFFF","#FFB066"];
+  for (let i = 0; i < n; i++){
+    const a = Math.random()*Math.PI*2, s = 4 + Math.random()*9;
+    parts.push({ x, y, vx:Math.cos(a)*s, vy:Math.sin(a)*s - 6, w:5+Math.random()*6, h:8+Math.random()*8, r:Math.random()*6, vr:(Math.random()-.5)*.3, c:cols[i%cols.length], life:0 });
+  }
+  if (!confettiRunning){ confettiRunning = true; requestAnimationFrame(tickConfetti); }
+}
+function tickConfetti(){
+  cx.clearRect(0,0,innerWidth,innerHeight);
+  parts = parts.filter(p => p.y < innerHeight + 40 && p.life < 260);
+  for (const p of parts){
+    p.vy += .28; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life++;
+    cx.save(); cx.translate(p.x,p.y); cx.rotate(p.r); cx.fillStyle = p.c; cx.fillRect(-p.w/2,-p.h/2,p.w,p.h*Math.abs(Math.cos(p.life/8))); cx.restore();
+  }
+  if (parts.length) requestAnimationFrame(tickConfetti); else { confettiRunning = false; cx.clearRect(0,0,innerWidth,innerHeight); }
+}
+function toast(msg){ const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 1800); }
+
+/* ---------- Modal plumbing ---------- */
+const layer = $("#layer");
+let onClose = null;
+function openOverlay(inner, closeCb){
+  layer.innerHTML = `<div class="overlay" id="overlay">${inner}</div>`;
+  onClose = closeCb || null;
+  const ov = $("#overlay");
+  ov.addEventListener("click", e => { if (e.target === ov) closeOverlay(); });
+  $$("[data-close]", ov).forEach(b => b.addEventListener("click", closeOverlay));
+  return ov;
+}
+function closeOverlay(){ if (!layer.firstChild) return; layer.innerHTML = ""; const cb = onClose; onClose = null; cb && cb(); }
+function closeOverlayQuiet(){ layer.innerHTML = ""; onClose = null; campOpen = false; }
+addEventListener("keydown", e => { if (e.key === "Escape") { if ($("#drawer").classList.contains("open")) toggleDrawer(false); else closeOverlay(); } });
+
+function winCard(p){
+  applyGift(p);
+  return `<div class="win">
+    <span class="eyebrow">Congratulations, you won</span>
+    <div class="win-prize">${p.title}</div>
+    <p style="margin:0;color:var(--muted)">${p.desc} It's already applied to your cart, so there's no code to copy.</p>
+    <div class="voucher">${TICKET}<div><small>Auto-applied at checkout</small><code>${p.code}</code></div><span class="applied"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>Applied</span></div>
+    <div class="timer">One-time gift · valid for <b class="num" data-expiry>${fmtLeft()}</b></div>
+    <div class="win-actions"><button class="btn-blue" type="button" data-close style="width:100%">Shop Now <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 6 6 6-6 6"/></svg></button></div>
+  </div>`;
+}
+function wireWin(root){
+  $$("[data-close]", root).forEach(b => b.addEventListener("click", closeOverlay));
+}
+
+let launcher;
+function showLauncher(label, fn){
+  hideLauncher();
+  launcher = document.createElement("button"); launcher.className = "launcher"; launcher.type = "button";
+  launcher.innerHTML = `<i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="12" rx="2"/><path d="M3 13h18M12 9v12M12 9C9 9 7 4 9.5 4S12 9 12 9Zm0 0c3 0 5-5 2.5-5S12 9 12 9Z"/></svg></i>${label}`;
+  launcher.addEventListener("click", () => { hideLauncher(); fn(); });
+  document.body.appendChild(launcher);
+}
+function hideLauncher(){ launcher && launcher.remove(); launcher = null; }
+
+/* =========================================================
+   IDEA 1 · SPIN THE WHEEL
+   ========================================================= */
+const SEG = 10, SEG_DEG = 360 / SEG, SEG_PRIZE = [0,1,2,3,4,0,1,2,3,4];
+let wheelPlayed = null;
+function drawWheel(canvas){
+  const size = canvas.parentElement.clientWidth || 320, d = devicePixelRatio || 1;
+  canvas.width = size*d; canvas.height = size*d;
+  const ctx = canvas.getContext("2d"); ctx.setTransform(d,0,0,d,0,0);
+  const R = size/2; ctx.translate(R,R);
+  for (let i = 0; i < SEG; i++){
+    const p = PRIZES[SEG_PRIZE[i]];
+    const a0 = (-90 + i*SEG_DEG) * Math.PI/180, a1 = a0 + SEG_DEG*Math.PI/180;
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.arc(0,0,R,a0,a1); ctx.closePath();
+    ctx.fillStyle = p.bg; ctx.fill(); ctx.strokeStyle = "#0C2340"; ctx.lineWidth = 2; ctx.stroke();
+    ctx.save(); ctx.rotate((a0+a1)/2);
+    ctx.fillStyle = p.fg; ctx.textAlign = "right"; ctx.textBaseline = "middle";
+    const big = Math.max(14, R*0.15), small = Math.max(8, R*0.062);
+    ctx.font = `700 ${p.l1.length > 3 ? big*0.78 : big}px paralucent, Montserrat, system-ui, sans-serif`;
+    ctx.fillText(p.l1, R-16, -small*0.55);
+    ctx.font = `700 ${small}px Montserrat, system-ui, sans-serif`;
+    ctx.fillText(p.l2.split("").join(String.fromCharCode(8202)), R-16, big*0.5);
+    ctx.restore();
+  }
+  const g = ctx.createRadialGradient(0,0,R*0.2,0,0,R);
+  g.addColorStop(0,"rgba(255,255,255,0)"); g.addColorStop(.86,"rgba(255,255,255,0)"); g.addColorStop(1,"rgba(12,35,64,.22)");
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0,0,R,0,Math.PI*2); ctx.fill();
+}
+function openWheel(){
+  hideLauncher();
+  const bulbs = Array.from({length:24}, () => `<i class="bulb"></i>`).join("");
+  const ov = openOverlay(`
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="wheel-title">
+      <button class="x on-dark" type="button" data-close aria-label="Close">${X_ICON}</button>
+      <div class="split">
+        <div class="copy" id="wheel-copy">
+          <span class="eyebrow">Welcome gift</span>
+          <h2 id="wheel-title">Spin the wheel, <em>light up</em> your first order</h2>
+          <p>Grab the wheel and give it a flick. Wherever the pointer lands, that prize is yours.</p>
+          <div class="chips">${PRIZES.map(p => `<span class="chip">${p.short}</span>`).join("")}</div>
+          <span class="fine">One spin per customer. Prizes valid for 48 hours.</span>
+        </div>
+        <div class="stage-dark">
+          <div class="wheel-stage" id="stage">
+            <div class="wheel-rim"></div>
+            <div class="bulbs">${bulbs}</div>
+            <div class="wheel" id="wheel"><canvas></canvas></div>
+            <button class="hub" id="hub" type="button">SPIN</button>
+            <svg class="pointer" id="pointer" viewBox="0 0 38 50" aria-hidden="true"><path d="M19 48 L4 16 A15 15 0 1 1 34 16 Z" fill="#D25600" stroke="#fff" stroke-width="3"/><circle cx="19" cy="15" r="5.5" fill="#fff"/></svg>
+          </div>
+          <div class="drag-hint" id="drag-hint"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>Drag the wheel to spin it</div>
+        </div>
+      </div>
+    </div>`, () => { if (wheelPlayed === null) showLauncher("Spin &amp; win", openWheel); });
+
+  const stage = $("#stage", ov), wheel = $("#wheel", ov), canvas = $("canvas", wheel), hub = $("#hub", ov), pointer = $("#pointer", ov), hint = $("#drag-hint", ov);
+  const placeBulbs = () => { const R = stage.clientWidth/2 - 9; $$(".bulb", stage).forEach((b,i) => b.style.transform = `rotate(${i*15}deg) translateY(${-R}px)`); };
+  const ro = new ResizeObserver(() => { if (!document.body.contains(canvas)) return ro.disconnect(); drawWheel(canvas); placeBulbs(); });
+  ro.observe(stage);
+  if (document.fonts) document.fonts.ready.then(() => document.body.contains(canvas) && drawWheel(canvas));
+
+  let rot = Math.random()*360, vel = 0, spinning = false, dragging = false, lastSeg = -1, samples = [], lastAngle = 0;
+  const apply = () => { wheel.style.transform = `rotate(${rot}deg)`; };
+  apply();
+  const segAt = r => Math.floor((((-r) % 360) + 360) % 360 / SEG_DEG);
+  // Pin physics: each passing peg kicks the pin against the spin direction, then a damped spring pulls it back
+  let pinAngle = 0, pinVel = 0, lastRot = rot, pinRunning = false;
+  const pinLoop = () => {
+    pinVel += -pinAngle * 0.22; pinVel *= 0.72; pinAngle += pinVel;
+    pointer.style.transform = `translateX(-50%) rotate(${pinAngle.toFixed(2)}deg)`;
+    if (document.body.contains(pointer) && (spinning || dragging || Math.abs(pinAngle) > 0.05 || Math.abs(pinVel) > 0.05)) requestAnimationFrame(pinLoop);
+    else { pinRunning = false; pointer.style.transform = ""; }
+  };
+  const tickCheck = () => {
+    const s = segAt(rot), dir = Math.sign(rot - lastRot) || 1; lastRot = rot;
+    if (s !== lastSeg){
+      if (lastSeg !== -1){
+        const kick = Math.min(30, 12 + Math.abs(vel) * 0.9);   // faster wheel, bigger flick
+        pinAngle = -dir * kick; pinVel = 0;
+      }
+      lastSeg = s;
+    }
+    if (!pinRunning){ pinRunning = true; requestAnimationFrame(pinLoop); }
+  };
+  if (wheelPlayed !== null){ showResult(wheelPlayed, false); return; }
+
+  const angleOf = e => { const b = wheel.getBoundingClientRect(); return Math.atan2(e.clientY - (b.top + b.height/2), e.clientX - (b.left + b.width/2)) * 180/Math.PI; };
+  wheel.addEventListener("pointerdown", e => {
+    if (spinning || wheelPlayed !== null) return;
+    dragging = true; wheel.setPointerCapture(e.pointerId);
+    lastAngle = angleOf(e); samples = [{t:performance.now(), r:rot}];
+  });
+  wheel.addEventListener("pointermove", e => {
+    if (!dragging) return;
+    const a = angleOf(e); let d = a - lastAngle;
+    if (d > 180) d -= 360; if (d < -180) d += 360;
+    lastAngle = a; rot += d; apply(); tickCheck();
+    const now = performance.now(); samples.push({t:now, r:rot});
+    while (samples.length > 2 && now - samples[0].t > 90) samples.shift();
+  });
+  const release = () => {
+    if (!dragging) return; dragging = false;
+    const a = samples[0], b = samples[samples.length-1];
+    const v = b.t > a.t ? (b.r - a.r) / (b.t - a.t) * 16.67 : 0;
+    const dir = v < 0 ? -1 : 1;
+    let speed = Math.abs(v);
+    if (speed < 12) speed = 14 + Math.random()*6;   // a weak flick still gets a fair spin
+    spin(dir * Math.min(speed, 30));
+  };
+  wheel.addEventListener("pointerup", release);
+  wheel.addEventListener("pointercancel", release);
+  hub.addEventListener("click", () => { if (!spinning && wheelPlayed === null) spin(16 + Math.random()*10); });
+
+  function spin(v){
+    spinning = true; vel = v; hub.disabled = true; stage.classList.add("spinning"); hint.style.visibility = "hidden";
+    let last = performance.now();
+    const step = now => {
+      const dt = Math.min(48, now - last) / 16.67; last = now;
+      rot += vel * dt;
+      vel *= Math.pow(Math.abs(vel) > 4 ? 0.986 : 0.972, dt);
+      apply(); tickCheck();
+      if (Math.abs(vel) > 0.06) requestAnimationFrame(step);
+      else { spinning = false; stage.classList.remove("spinning"); pointer.classList.add("landed"); wheelPlayed = SEG_PRIZE[segAt(rot)]; setTimeout(() => showResult(wheelPlayed, true), 350); }
+    };
+    requestAnimationFrame(step);
+  }
+  function showResult(idx, celebrate){
+    const copy = $("#wheel-copy", ov); if (!copy) return;
+    copy.innerHTML = winCard(PRIZES[idx]); wireWin(copy);
+    hub.disabled = true; hub.textContent = "WON"; hint.style.visibility = "hidden";
+    if (celebrate) confetti();
+  }
+}
+
+/* =========================================================
+   IDEA 2 · MYSTERY BOXES
+   ========================================================= */
+// One shared box style: primary-blue box, tawny ribbon (high contrast on the navy stage), white "?" badge
+const BOX_STYLE = { c:"#0072C8", c2:"#005FA8", rb:"#D25600", q:"#0072C8" };
+const BOX_COLORS = Array.from({length:6}, () => BOX_STYLE);
+let boxesState = null;
+function shuffle(a){ for (let i = a.length-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; }
+function openBoxes(){
+  hideLauncher();
+  if (!boxesState) boxesState = { order: shuffle([0,1,2,3,4, Math.floor(Math.random()*4)]), picked: null };
+  const ov = openOverlay(`
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="boxes-title" style="width:min(680px,100%)">
+      <button class="x" type="button" data-close aria-label="Close">${X_ICON}</button>
+      <div class="boxes-modal">
+        <div class="boxes-head" id="boxes-head">
+          <span class="eyebrow">Welcome gift</span>
+          <h2 id="boxes-title">Pick a box, <em>reveal your gift</em></h2>
+          <p>Six boxes, six surprises for your first order. Choose one to open it.</p>
+        </div>
+        <div class="box-stage">
+          <div class="boxes" id="boxes">
+            ${boxesState.order.map((pi,i) => { const k = BOX_COLORS[i]; return `
+              <button class="box" type="button" data-i="${i}" aria-label="Open box ${i+1}" style="--c:${k.c};--c2:${k.c2};--rb:${k.rb};--q:${k.q}">
+                <span class="gift"><span class="beam"></span><span class="gift-body"><span>?</span></span><span class="lid"><span class="bow"></span><span class="lid-top"></span></span></span>
+                <span class="prize-tag">${PRIZES[pi].short}</span>
+              </button>`; }).join("")}
+          </div>
+          <div class="boxes-foot" id="boxes-foot">10% · 5% · Free shipping · EGP 100 · 15%</div>
+        </div>
+        <div class="boxes-win" id="boxes-win"></div>
+      </div>
+    </div>`, () => { if (boxesState.picked === null) showLauncher("Open your gift", openBoxes); });
+
+  const boxes = $$(".box", ov);
+  const reveal = (i, celebrate) => {
+    boxes.forEach(b => b.disabled = true);
+    const chosen = boxes[i]; chosen.classList.add("chosen","open");
+    if (celebrate){ const r = chosen.getBoundingClientRect(); confetti(r.left + r.width/2, r.top + r.height/3, 140); }
+    setTimeout(() => boxes.forEach((b,j) => { if (j !== i) b.classList.add("open","revealed"); }), celebrate ? 900 : 0);
+    setTimeout(() => {
+      $("#boxes-head", ov).hidden = true; $("#boxes-foot", ov).textContent = "The other boxes held these. Better luck next time!";
+      const w = $("#boxes-win", ov); w.innerHTML = winCard(PRIZES[boxesState.order[i]]); wireWin(w);
+    }, celebrate ? 1300 : 0);
+  };
+  if (boxesState.picked !== null){ reveal(boxesState.picked, false); return; }
+  boxes.forEach((b,i) => b.addEventListener("click", () => {
+    if (boxesState.picked !== null) return;
+    boxesState.picked = i; boxes.forEach(x => x.disabled = true);
+    b.classList.add("shake");
+    setTimeout(() => { b.classList.remove("shake"); reveal(i, true); }, reduced ? 0 : 560);
+  }));
+}
+
+/* =========================================================
+   IDEA 3 · LUCKY ORDER CASHBACK
+   ========================================================= */
+const WALLET_START = 40;
+function setWallet(v){ $("#cart-wallet").textContent = `${Math.round(v).toLocaleString("en-US")} EGP`; $("#pay-wallet").textContent = `EGP ${Math.round(v).toLocaleString("en-US")}.00`; }
+function countUp(el, from, to, ms, done){
+  if (reduced){ el.textContent = egpPlain(to); done && done(); return; }
+  const t0 = performance.now();
+  const f = now => { const k = Math.min(1,(now-t0)/ms), e = 1 - Math.pow(1-k,3); el.textContent = egpPlain(from + (to-from)*e); k < 1 ? requestAnimationFrame(f) : done && done(); };
+  requestAnimationFrame(f);
+}
+function resetCheckout(){
+  luckyOrder = false; renderTotals();
+  setWallet(WALLET_START);
+  const b = $("#place"); b.disabled = false; b.innerHTML = `Place Order <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 6 6 6-6 6"/></svg>`;
+  $("#done").hidden = true; $("#wallet-row").classList.remove("lit");
+}
+$("#place").addEventListener("click", () => {
+  const b = $("#place"); if (b.disabled) return;
+  b.disabled = true; b.innerHTML = `<span class="spinner"></span> Processing payment…`;
+  setTimeout(() => {
+    b.innerHTML = "Order placed"; $("#done").hidden = false;
+    if (idea === "cashback"){ luckyOrder = true; renderTotals(); openLucky(); }
+    else { renderTotals(); setTimeout(() => showView("thanks"), 500); }
+  }, 1400);
+});
+function openLucky(){
+  const ov = openOverlay(`
+    <div class="lucky" role="dialog" aria-modal="true" aria-labelledby="lucky-title">
+      <div class="lucky-top">
+        <div class="rays" aria-hidden="true"></div>
+        <button class="x on-dark" type="button" data-close aria-label="Close">${X_ICON}</button>
+        <span class="eyebrow">Order #SL-40817</span>
+        <h2 id="lucky-title">It's a <em>lucky order!</em></h2>
+        <div class="ticket">
+          <small>Cashback to your wallet</small>
+          <div class="amt num" id="lucky-amt">EGP 0</div>
+          <div class="order-no">100% of this order, back to you</div>
+        </div>
+      </div>
+      <div class="lucky-body">
+        <p>Your whole order total went straight back into your Smart Light wallet. Use it on your next order, any product.</p>
+        <div class="wallet-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M16 13h2M3 10h18"/></svg>
+          <div><small>Wallet Balance</small><strong class="num" id="lucky-wallet">${egpPlain(WALLET_START)}</strong></div></div>
+        <button class="btn-blue" type="button" data-close style="width:100%">View my order <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 6 6 6-6 6"/></svg></button>
+        <span class="fine">1 in every 100 orders wins. Cashback capped at EGP 5,000 and valid for 60 days.</span>
+      </div>
+    </div>`, () => { $("#wallet-row").classList.add("lit"); setTimeout(() => showView("thanks"), 250); });
+  setTimeout(() => confetti(innerWidth/2, innerHeight/3, 200), 300);
+  setTimeout(() => countUp($("#lucky-amt", ov), 0, ORDER_TOTAL, 1300, () => {
+    countUp($("#lucky-wallet", ov), WALLET_START, WALLET_START + ORDER_TOTAL, 900);
+    setWallet(WALLET_START + ORDER_TOTAL);
+  }), 600);
+}
+
+$("#go-wallet").addEventListener("click", openWallet);
+function openWallet(){
+  showView("wallet");
+  const bal = $("#bal"), amt = $("#bal-amt"), delta = $("#bal-delta");
+  bal.classList.remove("lit"); delta.classList.remove("show"); amt.textContent = egpPlain(WALLET_START);
+  $("#hist-tot").textContent = egpPlain(WALLET_START + ORDER_TOTAL);
+  const row = $("#hist-new"); row.style.animation = "none"; void row.offsetWidth; row.style.animation = "";
+  setTimeout(() => {
+    delta.textContent = "+" + egpPlain(ORDER_TOTAL) + " cashback"; delta.classList.add("show");
+    countUp(amt, WALLET_START, WALLET_START + ORDER_TOTAL, 1200, () => { bal.classList.add("lit"); confetti(innerWidth/2, innerHeight/3, 120); });
+  }, 500);
+}
+
+/* =========================================================
+   IDEA 4 · BACKEND-CONTROLLED POPUP
+   ========================================================= */
+const DEFAULT_CAMP = {
+  type:"text", eyebrow:"Flash sale · ends soon", title:"Up to 70% off Sirage lighting",
+  body:"LED lamps, panels and spotlights at their lowest prices of the year, while stocks last.",
+  btn:"Shop the sale", link:"/en/offers", theme:"light", icon:"flash", count:"on",
+  img:null, vlink:"/en/category/panel", delay:"1", bg:null, shade:"0.6"
+};
+let camp = Object.assign({}, DEFAULT_CAMP, store.get("sl-camp-v3", {}));
+const THEMES = {
+  light:{ bg:"#FFFFFF", fg:"#0C2340", body:"#5D6874", icon:"#0072C8", eb:"#D25600", btnBg:"#0072C8", btnFg:"#FFFFFF", cntBg:"#FDEEE3", cntFg:"#D25600", x:"" },
+  navy: { bg:"#0C2340", fg:"#FFFFFF", body:"#B2D2EF", icon:"#3386D4", eb:"#FFB066", btnBg:"#0072C8", btnFg:"#FFFFFF", cntBg:"#FFFFFF", cntFg:"#0C2340", x:"on-dark" },
+  blue: { bg:"#0072C8", fg:"#FFFFFF", body:"#E5F0FA", icon:"#FFFFFF", eb:"#CCE1F4", btnBg:"#FFFFFF", btnFg:"#0072C8", cntBg:"#FFFFFF", cntFg:"#0072C8", x:"on-dark" },
+  image:{ bg:"transparent", fg:"#FFFFFF", body:"#E5F0FA", icon:"#FFFFFF", eb:"#FFB066", btnBg:"#0072C8", btnFg:"#FFFFFF", cntBg:"#FFFFFF", cntFg:"#D25600", x:"on-dark" },
+  tawny:{ bg:"#D25600", fg:"#FFFFFF", body:"#FFE9DA", icon:"#FFFFFF", eb:"#FFE9DA", btnBg:"#FFFFFF", btnFg:"#D25600", cntBg:"#FFFFFF", cntFg:"#D25600", x:"on-dark" },
+};
+const ICONS = {
+  flash:`<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><circle cx="32" cy="32" r="27"/><path d="M35 13 20 36h12l-3 15 15-23H32z"/></svg>`,
+  voucher:`<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"><path d="M14 24 26 12a4 4 0 0 0 6 6l14 14a4 4 0 0 0-6 6L28 50a4 4 0 0 0-6-6L8 30a4 4 0 0 0 6-6Z" transform="translate(5 2)"/><path d="m28 36 10-10" stroke-dasharray="4 5"/></svg>`,
+  truck:`<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M6 16h32v28H6zM38 24h11l9 10v10H38"/><circle cx="17" cy="47" r="5" fill="currentColor"/><circle cx="47" cy="47" r="5" fill="currentColor"/></svg>`,
+  bulb:`<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M24 46h16M26 53h12M32 8a16 16 0 0 0-9 29c2 1.5 3 3.5 3 6h12c0-2.5 1-4.5 3-6a16 16 0 0 0-9-29Z"/><path d="M32 2v-4M54 30h4M6 30h4M48 14l3-3M13 11l3 3" transform="translate(0 2)"/></svg>`,
+};
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function campMarkup(){
+  if (camp.type === "visual"){
+    const src = camp.img || "assets/hero-1.webp";
+    return `<div class="camp camp-visual-wrap" style="--w:${camp.img ? "560px" : "620px"};background:#0C2340" role="dialog" aria-modal="true" aria-label="Campaign">
+      <button class="x on-dark" type="button" data-close aria-label="Close">${X_ICON}</button>
+      <button class="camp-visual" type="button" data-cta title="Opens ${esc(camp.vlink)}"><img src="${src}" alt="Campaign visual"></button>
+    </div>`;
+  }
+  const isImg = camp.type === "image";
+  const t = isImg ? THEMES.image : (THEMES[camp.theme] || THEMES.light);
+  const b = $$("#flash-count b").map(x => x.textContent);
+  const shell = isImg
+    ? `<div class="camp camp-bg" style="--shade:${camp.shade};background-image:url('${camp.bg || "assets/elegant.webp"}')" role="dialog" aria-modal="true" aria-labelledby="camp-title">`
+    : `<div class="camp" style="background:${t.bg};color:${t.fg}" role="dialog" aria-modal="true" aria-labelledby="camp-title">`;
+  return `${shell}
+    <button class="x ${t.x}" type="button" data-close aria-label="Close">${X_ICON}</button>
+    <div class="camp-text">
+      <span class="camp-icon" style="color:${t.icon}">${ICONS[camp.icon] || ICONS.flash}</span>
+      ${camp.eyebrow ? `<span class="eyebrow" style="color:${t.eb}">${esc(camp.eyebrow)}</span>` : ""}
+      <h2 id="camp-title">${esc(camp.title)}</h2>
+      ${camp.body ? `<p style="color:${t.body};opacity:1">${esc(camp.body)}</p>` : ""}
+      ${camp.count === "on" ? `<div class="camp-count num">${[["Days",b[0]],["Hrs",b[1]],["Mins",b[2]]].map(([l,v]) => `<span style="background:${t.cntBg};color:${t.cntFg}">${v}<small>${l}</small></span>`).join("")}</div>` : ""}
+      ${camp.btn ? `<button class="cta" type="button" data-cta style="background:${t.btnBg};color:${t.btnFg}" title="Opens ${esc(camp.link)}">${esc(camp.btn)} <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 6 6 6-6 6"/></svg></button>` : ""}
+    </div>
+  </div>`;
+}
+let campOpen = false;
+function openCamp(){
+  hideLauncher();
+  const ov = openOverlay(campMarkup(), () => { campOpen = false; });
+  campOpen = true;
+  $$("[data-cta]", ov).forEach(b => b.addEventListener("click", () => { toast(`Opens ${camp.type === "visual" ? camp.vlink : camp.link}`); closeOverlay(); }));
+}
+function refreshCamp(){ try { store.set("sl-camp-v3", camp); } catch {} if (campOpen && idea === "popup"){ layer.innerHTML = ""; openCamp(); } }
+
+const drawer = $("#drawer");
+function toggleDrawer(open){ drawer.classList.toggle("open", open); }
+$("#admin-toggle").addEventListener("click", () => toggleDrawer(true));
+$("#drawer-close").addEventListener("click", () => toggleDrawer(false));
+$("#f-preview").addEventListener("click", () => openCamp());
+function syncForm(){
+  $$("#f-type button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === camp.type));
+  $$("#f-theme button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === camp.theme));
+  $("#text-fields").hidden = camp.type === "visual";
+  $("#bg-fields").hidden = camp.type !== "image";
+  $("#theme-field").hidden = camp.type !== "text";
+  $("#visual-fields").hidden = camp.type !== "visual";
+  ["eyebrow","title","body","btn","link","vlink","delay","icon","count","shade"].forEach(k => { const el = $("#f-"+k); if (el && document.activeElement !== el) el.value = camp[k]; });
+}
+$$("#f-type button").forEach(b => b.addEventListener("click", () => { camp.type = b.dataset.v; syncForm(); refreshCamp(); }));
+$$("#f-theme button").forEach(b => b.addEventListener("click", () => { camp.theme = b.dataset.v; syncForm(); refreshCamp(); }));
+["eyebrow","title","body","btn","link","vlink"].forEach(k => $("#f-"+k).addEventListener("input", e => { camp[k] = e.target.value; refreshCamp(); }));
+["icon","count","shade"].forEach(k => $("#f-"+k).addEventListener("change", e => { camp[k] = e.target.value; refreshCamp(); }));
+$("#f-delay").addEventListener("change", e => { camp.delay = e.target.value; store.set("sl-camp-v3", camp); });
+$("#f-img").addEventListener("change", e => {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader(); r.onload = () => { camp.img = r.result; refreshCamp(); }; r.readAsDataURL(f);
+});
+$("#f-bg").addEventListener("change", e => {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader(); r.onload = () => { camp.bg = r.result; refreshCamp(); }; r.readAsDataURL(f);
+});
+$("#f-bg-clear").addEventListener("click", () => { camp.bg = null; $("#f-bg").value = ""; refreshCamp(); });
+$("#f-img-clear").addEventListener("click", () => { camp.img = null; $("#f-img").value = ""; refreshCamp(); });
+syncForm();
+
+/* =========================================================
+   PRESENTER: idea switching
+   ========================================================= */
+const NOTES = {
+  wheel:   `<b>Homepage popup.</b> Visitors drag and flick the wheel (or tap Spin). The prize is applied to their cart automatically and shows as a discount at checkout, with a 48-hour countdown. One spin per customer.`,
+  boxes:   `<b>Homepage popup.</b> Six gift boxes, each hiding a prize. The visitor opens one; the gift is applied to their cart automatically and shows as a discount at checkout, with a 48-hour countdown.`,
+  cashback:`<b>At checkout (Pay step).</b> After payment, a random share of orders (e.g. 1 in 100) gets the full order total back as wallet cashback. Press “Place Order”, then follow the order page to the wallet.`,
+  popup:   `<b>Homepage popup, managed from the dashboard.</b> Marketing picks text &amp; button, text over a background photo, or a full creative visual, then sets copy, colours, icon, countdown, timing and audience. Open “Popup settings” to edit it live.`,
+};
+const REPLAY = { wheel:"Replay as new visitor", boxes:"Replay as new visitor", cashback:"Reset checkout", popup:"Replay as new visitor" };
+let idea = "wheel", entryTimer;
+function setIdea(next, fresh){
+  idea = next;
+  clearTimeout(entryTimer); closeOverlayQuiet(); hideLauncher(); toggleDrawer(false); parts = [];
+  $$(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.idea === idea));
+  $("#idea-note").innerHTML = NOTES[idea];
+  $("#replay-label").textContent = REPLAY[idea];
+  showView(idea === "cashback" ? "checkout" : "home");
+  $("#admin-toggle").hidden = idea !== "popup";
+  store.set("sl-idea", idea);
+  if (location.hash.slice(1) !== idea) history.replaceState(null, "", "#" + idea);
+  if (fresh){ gift = null; resetCheckout(); if (idea === "wheel") wheelPlayed = null; if (idea === "boxes") boxesState = null; if (idea === "cashback") resetCheckout(); }
+  scrollTo({top:0, behavior: reduced ? "auto" : "smooth"});
+  if (idea === "home") return;
+  requestAnimationFrame(drawPattern);
+  const delay = idea === "popup" ? Math.max(500, (+camp.delay||0)*1000) : 900;
+  if (idea !== "cashback") entryTimer = setTimeout(() => ({wheel:openWheel, boxes:openBoxes, popup:openCamp})[idea](), delay);
+}
+$$(".tab").forEach(t => t.addEventListener("click", () => setIdea(t.dataset.idea, true)));
+$("#replay").addEventListener("click", () => setIdea(idea, true));
+const fromHash = location.hash.slice(1);
+setIdea(NOTES[fromHash] ? fromHash : (NOTES[store.get("sl-idea")] ? store.get("sl-idea") : "wheel"), true);
+})();
+</script>
