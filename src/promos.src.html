@@ -289,11 +289,6 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 .spin-again h2{font-size:clamp(28px,3.4vw,40px);color:var(--navy)}
 .spin-again h2 em{font-style:normal;color:var(--blue)}
 .spin-again p{margin:0;color:var(--muted)}
-.quota{display:grid;gap:6px}
-.quota-bar{height:8px;border-radius:8px;background:var(--gray-10);overflow:hidden}
-.quota-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--tawny),#ff9a4d);border-radius:8px}
-.quota small{font-size:12px;color:var(--muted)}
-.quota small b{color:var(--tawny)}
 .win.lose .eyebrow{color:var(--tawny)}
 .win.lose .win-prize{color:var(--navy);font-size:clamp(28px,4.4vw,40px)}
 .box.out .prize-tag{background:var(--gray-10)!important;color:var(--muted)!important;text-decoration:line-through}
@@ -1195,14 +1190,10 @@ function triesBlock(used){
     ${left ? `<small>${left} spin${left > 1 ? "s" : ""} left · a new spin replaces this prize</small>` : `<small class="limit">Limit reached</small>`}
   </div>`;
 }
-function quotaBlock(idx){
-  const q = QUOTA[idx];
-  return `<div class="quota"><div class="quota-bar"><i style="width:${Math.round((1 - q.left/q.total)*100)}%"></i></div><small><b class="num">${q.left}</b> of ${q.total.toLocaleString("en-US")} left in this campaign</small></div>`;
-}
 function winCard(p, o = {}){
   const idx = PRIZES.indexOf(p);
   if (loggedIn) applyGift(p); else { pendingGift = p; gift = null; renderTotals(); }
-  const extras = (o.source === "boxes" ? quotaBlock(idx) : "") + (o.source === "wheel" ? triesBlock(o.used) : "");
+  const extras = o.source === "wheel" ? triesBlock(o.used) : "";
   if (!loggedIn) return `<div class="win">
     <span class="eyebrow">Congratulations, you won</span>
     <div class="win-prize">${p.title}</div>
@@ -1222,7 +1213,6 @@ function winCard(p, o = {}){
     <p style="margin:0;color:var(--muted)">${p.desc} It's already applied to your cart, so there's no code to copy.</p>
     <div class="voucher">${TICKET}<div><small>Auto-applied at checkout</small><code>${p.code}</code></div><span class="applied">${CHECK}Applied</span></div>
     <div class="timer">One-time gift · valid for <b class="num" data-expiry>${fmtLeft()}</b></div>
-    ${o.source === "boxes" ? quotaBlock(idx) : ""}
     <div class="win-actions"><button class="btn-blue" type="button" data-close style="width:100%">Shop Now ${ARROW}</button></div>
     ${o.source === "wheel" ? triesBlock(o.used) : ""}
   </div>`;
@@ -1233,7 +1223,6 @@ function loseCard(p){
     <span class="eyebrow">Good luck next time</span>
     <div class="win-prize">${p.title} is out of quota</div>
     <p style="margin:0;color:var(--muted)">All ${q.total.toLocaleString("en-US")} of this campaign's ${p.title} gifts have been claimed. New boxes open tomorrow, so come back and try again.</p>
-    <div class="quota"><div class="quota-bar"><i style="width:100%"></i></div><small><b class="num">0</b> of ${q.total.toLocaleString("en-US")} left</small></div>
     <div class="win-actions"><button class="btn-blue" type="button" data-close style="width:100%">Shop Now ${ARROW}</button></div>
   </div>`;
 }
