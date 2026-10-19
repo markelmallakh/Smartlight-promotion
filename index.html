@@ -271,10 +271,6 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 .login-box b svg{width:18px;height:18px;color:var(--blue)}
 .login-box small{color:var(--muted);font-size:12px}
 .login-box .btn-blue{width:100%}
-.phone{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--gray-line);border-radius:8px;padding:0 12px;height:46px}
-.phone:focus-within{border-color:var(--blue)}
-.phone .cc{display:flex;gap:6px;align-items:center;font-weight:500;font-size:14px;color:var(--muted);border-right:1px solid var(--gray-line);padding-right:10px;flex:none}
-.phone input{border:0;outline:none;font:inherit;font-size:15px;font-weight:500;flex:1;min-width:0;background:transparent;color:var(--text)}
 .link-u{color:var(--blue);font-weight:600;text-decoration:underline;cursor:pointer}
 .tries{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-top:1px solid var(--gray-line);padding-top:14px}
 .try-btn{height:44px;border:1.5px solid var(--blue);background:#fff;color:var(--blue);border-radius:99px;padding:0 8px 0 18px;font-weight:600;font-size:14px;display:inline-flex;gap:10px;align-items:center}
@@ -496,6 +492,7 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 .box.revealed{opacity:.45}
 .box.revealed .prize-tag{transform:translate(-50%,0) scale(.85)}
 .boxes-win:empty{display:none}
+.boxes-modal:has(.box-stage[hidden]){padding-top:48px}
 .boxes-win{max-width:520px;width:100%;margin:0 auto}
 
 /* lucky order */
@@ -1203,9 +1200,9 @@ function winCard(p, o = {}){
     <div class="voucher">${TICKET}<div><small>Your gift</small><code>${p.code}</code></div><span class="applied locked">${LOCK}Locked</span></div>
     <div class="login-box">
       <b>${LOCK}Log in to use your gift</b>
-      <div class="phone"><span class="cc"><i class="flag"></i>+20</span><input id="login-phone" type="tel" inputmode="tel" value="100 123 4567" aria-label="Mobile number"></div>
-      <button class="btn-blue" type="button" data-login>Log in &amp; claim gift ${ARROW}</button>
-      <small>New to Smart Light? <span class="link-u" data-login>Create an account</span> · we'll hold your gift for 30 minutes.</small>
+      <small>We'll hold it for you for 30 minutes.</small>
+      <button class="btn-blue" type="button" data-login>Log in to claim ${ARROW}</button>
+      <small>New to Smart Light? <span class="link-u" data-login>Create an account</span></small>
     </div>
     ${extras}
   </div>`;
@@ -1232,7 +1229,7 @@ function wireWin(root, h = {}){
   $$("[data-close]", root).forEach(b => b.addEventListener("click", closeOverlay));
   const t = $("[data-try]", root); t && t.addEventListener("click", () => h.onTry && h.onTry());
   $$("[data-login]", root).forEach(l => l.addEventListener("click", () => {
-    const btn = $("button[data-login]", root); btn.disabled = true; btn.innerHTML = `<span class="spinner"></span> Verifying…`;
+    const btn = $("button[data-login]", root); btn.disabled = true; btn.innerHTML = `<span class="spinner"></span> Opening login…`;
     setTimeout(() => { loggedIn = true; sc.auth = "member"; renderScen(); toast("Logged in as Mark Amir · gift applied"); h.rerender && h.rerender(); }, 900);
   }));
 }
@@ -1436,12 +1433,13 @@ function openBoxes(){
     if (celebrate && !boxesState.out){ const r = chosen.getBoundingClientRect(); confetti(r.left + r.width/2, r.top + r.height/3, 140); }
     setTimeout(() => boxes.forEach((b,j) => { if (j !== i) b.classList.add("open","revealed"); }), celebrate ? 900 : 0);
     setTimeout(() => {
-      $("#boxes-head", ov).hidden = true;
+      $("#boxes-head", ov).hidden = true; $(".box-stage", ov).hidden = true;   // swap: the popup now shows only the offer
+      ov.firstElementChild.scrollTop = 0;
       const w = $("#boxes-win", ov), p = PRIZES[boxesState.order[i]];
       if (boxesState.out){ w.innerHTML = loseCard(p); wireWin(w); return; }
       const render = () => { w.innerHTML = winCard(p, { source:"boxes" }); wireWin(w, { rerender:render }); };
       render();
-    }, celebrate ? 1300 : 0);
+    }, celebrate ? 1900 : 0);
   };
   if (boxesState.picked !== null){ reveal(boxesState.picked, false); return; }
   boxes.forEach((b,i) => b.addEventListener("click", () => {
