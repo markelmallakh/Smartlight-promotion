@@ -47,28 +47,30 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 
 /* ===================== PRESENTER BAR (not part of the site) ===================== */
 .presenter{position:sticky;top:env(safe-area-inset-top,0px);z-index:60;background:#060b12;color:#fff;padding-block:10px;padding-inline:16px;border-bottom:2px solid var(--blue)}
-.presenter-inner{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
-.presenter-label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue-30);font-weight:700}
-.tabs{display:flex;flex-wrap:wrap;gap:4px;background:#17222f;padding:4px;border-radius:999px}
+.p-row{display:grid;grid-template-columns:76px minmax(0,1fr) auto;align-items:center;gap:12px}
+.p-row + .p-row{margin-top:8px}
+.p-label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue-30);font-weight:700}
+.tabs,.scen{display:flex;gap:8px;min-width:0;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar,.scen::-webkit-scrollbar{display:none}
+.tabs{justify-self:start;gap:4px;background:#17222f;padding:4px;border-radius:999px;max-width:100%}
+.tab{flex:none;white-space:nowrap}
 .tab{border:0;background:transparent;color:var(--blue-30);padding:8px 14px;border-radius:999px;font-weight:600;font-size:13px;display:flex;align-items:center;gap:8px;transition:background .2s,color .2s}
 .tab .n{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#26354a;font-size:11px;color:#fff}
 .tab:hover{color:#fff}
 .tab[aria-selected="true"]{background:var(--blue);color:#fff}
 .tab[aria-selected="true"] .n{background:#fff;color:var(--blue)}
-.replay{margin-left:auto;border:1px solid #2a3a50;background:transparent;color:#fff;padding:8px 14px;border-radius:999px;font-weight:600;font-size:13px;display:flex;gap:8px;align-items:center}
+.replay{justify-self:end;white-space:nowrap;border:1px solid #2a3a50;background:transparent;color:#fff;padding:8px 14px;border-radius:999px;font-weight:600;font-size:13px;display:flex;gap:8px;align-items:center}
 .replay:hover{border-color:var(--blue-80)}
-.idea-note{margin:8px 0 0;font-size:12.5px;color:var(--blue-30)}
+.idea-note{margin:8px 0 0 88px;font-size:12.5px;color:var(--blue-30);max-width:110ch}
 .idea-note b{color:#fff}
 
-/* scenario chips (presenter only) */
-.scen{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px}
-.scen-label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue-30);font-weight:700;margin-right:4px}
-.scen-sep{width:1px;height:20px;background:#2a3a50;margin:0 4px}
-.chip-s{white-space:nowrap;flex:none;border:1px solid #2a3a50;background:transparent;color:#cfe0f2;border-radius:99px;padding:6px 12px;font-size:12px;font-weight:600;display:inline-flex;gap:6px;align-items:center;transition:background .15s,color .15s,border-color .15s}
-.chip-s:hover{border-color:var(--blue-80);color:#fff}
-.chip-s[aria-pressed="true"]{background:#fff;color:var(--navy);border-color:#fff}
-.chip-s.play{border-color:var(--tawny);color:#ffb066}
-.chip-s.play:hover{background:var(--tawny);color:#fff}
+/* scenario chips (presenter only): each group is a segmented pill, like the idea tabs */
+.seg-g{display:flex;gap:2px;flex:none;background:#17222f;padding:4px;border-radius:999px}
+.chip-s{white-space:nowrap;flex:none;border:0;background:transparent;color:var(--blue-30);border-radius:999px;padding:7px 12px;font-size:12.5px;font-weight:600;transition:background .15s,color .15s}
+.chip-s:hover{color:#fff}
+.chip-s[aria-pressed="true"]{background:#fff;color:var(--navy)}
+.replay.loader-btn svg{color:#ffb066}
+.replay.loader-btn:hover{border-color:var(--tawny)}
 
 /* ===================== SITE CLONE ===================== */
 .flash{background:var(--tawny);color:#fff;display:flex;align-items:center;justify-content:center;gap:16px;padding-block:8px;position:relative;flex-wrap:wrap}
@@ -612,7 +614,9 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
   .boxes-modal{padding:44px 16px 20px}
   .box-stage{padding:22px 12px 14px}
   .tab .lbl-long{display:none}
-  .replay{margin-left:0}
+  .p-row{grid-template-columns:minmax(0,1fr) auto;row-gap:6px}
+  .p-label{grid-column:1 / -1}
+  .idea-note{margin-left:0}
   .stats{gap:24px}
   .flash-title{font-size:16px}
 }
@@ -623,8 +627,8 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 
 <!-- ===================== PRESENTER BAR ===================== -->
 <header class="presenter">
-  <div class="presenter-inner">
-    <span class="presenter-label">Smart Light · promotion concepts</span>
+  <div class="p-row">
+    <span class="p-label">Idea</span>
     <div class="tabs" role="tablist" aria-label="Promotion idea">
       <button class="tab" role="tab" id="tab-wheel" data-idea="wheel"><span class="n">1</span>Spin<span class="lbl-long">&nbsp;the wheel</span></button>
       <button class="tab" role="tab" id="tab-boxes" data-idea="boxes"><span class="n">2</span>Mystery<span class="lbl-long">&nbsp;boxes</span></button>
@@ -636,7 +640,11 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
       <span id="replay-label">Replay as new visitor</span>
     </button>
   </div>
-  <div class="scen" id="scen" aria-label="Scenario"></div>
+  <div class="p-row">
+    <span class="p-label">Scenario</span>
+    <div class="scen" id="scen" aria-label="Scenario"></div>
+    <button class="replay loader-btn" id="loader-btn" type="button"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg>Intro loader</button>
+  </div>
   <p class="idea-note" id="idea-note"></p>
 </header>
 
@@ -1632,22 +1640,20 @@ const REPLAY = { wheel:"Replay as new visitor", boxes:"Replay as new visitor", c
 let idea = "wheel", entryTimer;
 
 /* ---------- Scenario chips ---------- */
-const PLAY = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg>`;
 function renderScen(){
   const chip = (g, v, label, cur) => `<button class="chip-s" type="button" data-g="${g}" data-v="${v}" aria-pressed="${(cur ?? sc[g]) === v}">${label}</button>`;
-  const sep = `<span class="scen-sep"></span>`;
-  let h = `<span class="scen-label">Scenario</span>`;
-  if (idea === "wheel" || idea === "boxes") h += chip("auth","guest","Guest visitor") + chip("auth","member","Logged-in customer") + sep;
-  if (idea === "wheel") h += chip("spins","fresh","First spin") + chip("spins","last","Last spin · 2/3 used") + chip("spins","limit","Limit reached · 3/3") + sep;
-  if (idea === "boxes") h += chip("quota","in","Prize in stock") + chip("quota","out","Prize out of quota") + sep;
-  if (idea === "cashback") h += chip("cash","checkout","Checkout") + chip("cash","pending","Wallet · pending") + chip("cash","delivered","Wallet · order delivered") + sep;
-  if (idea === "popup") h += chip("ptype","text","Text &amp; button", camp.type) + chip("ptype","image","Image background", camp.type) + chip("ptype","visual","Full visual", camp.type) + sep;
-  h += `<button class="chip-s play" type="button" data-loader>${PLAY}Intro loader</button>`;
+  const group = (...chips) => `<div class="seg-g">${chips.join("")}</div>`;
+  let h = "";
+  if (idea === "wheel" || idea === "boxes") h += group(chip("auth","guest","Guest visitor"), chip("auth","member","Logged-in customer"));
+  if (idea === "wheel") h += group(chip("spins","fresh","First spin"), chip("spins","last","Last spin · 2/3"), chip("spins","limit","Limit reached · 3/3"));
+  if (idea === "boxes") h += group(chip("quota","in","Prize in stock"), chip("quota","out","Prize out of quota"));
+  if (idea === "cashback") h += group(chip("cash","checkout","Checkout"), chip("cash","pending","Wallet · pending"), chip("cash","delivered","Wallet · delivered"));
+  if (idea === "popup") h += group(chip("ptype","text","Text &amp; button", camp.type), chip("ptype","image","Image background", camp.type), chip("ptype","visual","Full visual", camp.type));
   $("#scen").innerHTML = h;
 }
+$("#loader-btn").addEventListener("click", () => { playLoader(); setIdea(idea, true); });
 $("#scen").addEventListener("click", e => {
   const b = e.target.closest("button"); if (!b) return;
-  if (b.hasAttribute("data-loader")){ playLoader(); setIdea(idea, true); return; }
   const g = b.dataset.g, v = b.dataset.v;
   if (g === "ptype"){ camp.type = v; syncForm(); store.set("sl-camp-v3", camp); setIdea("popup", true); return; }
   sc[g] = v;
