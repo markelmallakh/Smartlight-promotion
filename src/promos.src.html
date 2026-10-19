@@ -60,6 +60,16 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 .idea-note{margin:8px 0 0;font-size:12.5px;color:var(--blue-30)}
 .idea-note b{color:#fff}
 
+/* scenario chips (presenter only) */
+.scen{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px}
+.scen-label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue-30);font-weight:700;margin-right:4px}
+.scen-sep{width:1px;height:20px;background:#2a3a50;margin:0 4px}
+.chip-s{border:1px solid #2a3a50;background:transparent;color:#cfe0f2;border-radius:99px;padding:6px 12px;font-size:12px;font-weight:600;display:inline-flex;gap:6px;align-items:center;transition:background .15s,color .15s,border-color .15s}
+.chip-s:hover{border-color:var(--blue-80);color:#fff}
+.chip-s[aria-pressed="true"]{background:#fff;color:var(--navy);border-color:#fff}
+.chip-s.play{border-color:var(--tawny);color:#ffb066}
+.chip-s.play:hover{background:var(--tawny);color:#fff}
+
 /* ===================== SITE CLONE ===================== */
 .flash{background:var(--tawny);color:#fff;display:flex;align-items:center;justify-content:center;gap:16px;padding-block:8px;position:relative;flex-wrap:wrap}
 .flash-title{display:flex;align-items:center;gap:8px;font-family:var(--display);font-weight:600;font-size:20px;line-height:1.4}
@@ -252,6 +262,41 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 .sum.disc{color:var(--green)}
 .sum.total s{color:var(--muted);font-weight:500;font-size:13px;margin-right:10px}
 .voucher .applied svg{width:14px;height:14px;color:#fff}
+.applied.locked{background:var(--gray-10);color:var(--muted)}
+.voucher .applied.locked svg{color:var(--muted)}
+.login-box{display:grid;gap:10px;background:var(--gray-5);border-radius:12px;padding:14px}
+.login-box b{font-size:15px;color:var(--navy);display:flex;gap:8px;align-items:center}
+.login-box b svg{width:18px;height:18px;color:var(--blue)}
+.login-box small{color:var(--muted);font-size:12px}
+.login-box .btn-blue{width:100%}
+.phone{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--gray-line);border-radius:8px;padding:0 12px;height:46px}
+.phone:focus-within{border-color:var(--blue)}
+.phone .cc{display:flex;gap:6px;align-items:center;font-weight:500;font-size:14px;color:var(--muted);border-right:1px solid var(--gray-line);padding-right:10px;flex:none}
+.phone input{border:0;outline:none;font:inherit;font-size:15px;font-weight:500;flex:1;min-width:0;background:transparent;color:var(--text)}
+.link-u{color:var(--blue);font-weight:600;text-decoration:underline;cursor:pointer}
+.tries{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-top:1px solid var(--gray-line);padding-top:14px}
+.try-btn{height:44px;border:1.5px solid var(--blue);background:#fff;color:var(--blue);border-radius:99px;padding:0 8px 0 18px;font-weight:600;font-size:14px;display:inline-flex;gap:10px;align-items:center}
+.try-btn .cnt{background:var(--blue-10);border-radius:99px;padding:4px 10px;font-size:12px}
+.try-btn:not(:disabled):hover{background:var(--blue-10)}
+.try-btn:disabled{opacity:.45;border-color:var(--gray-line);color:var(--muted);cursor:not-allowed}
+.try-btn:disabled .cnt{background:var(--gray-10)}
+.tries small{font-size:12px;color:var(--muted)}
+.tries small.limit{color:var(--tawny);font-weight:600}
+.dots3{display:flex;gap:6px}
+.dots3 i{width:10px;height:10px;border-radius:50%;background:var(--gray-10)}
+.dots3 i.on{background:var(--blue)}
+.spin-again{display:grid;gap:12px;animation:pop .45s cubic-bezier(.2,1.3,.4,1)}
+.spin-again h2{font-size:clamp(28px,3.4vw,40px);color:var(--navy)}
+.spin-again h2 em{font-style:normal;color:var(--blue)}
+.spin-again p{margin:0;color:var(--muted)}
+.quota{display:grid;gap:6px}
+.quota-bar{height:8px;border-radius:8px;background:var(--gray-10);overflow:hidden}
+.quota-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--tawny),#ff9a4d);border-radius:8px}
+.quota small{font-size:12px;color:var(--muted)}
+.quota small b{color:var(--tawny)}
+.win.lose .eyebrow{color:var(--tawny)}
+.win.lose .win-prize{color:var(--navy);font-size:clamp(28px,4.4vw,40px)}
+.box.out .prize-tag{background:var(--gray-10)!important;color:var(--muted)!important;text-decoration:line-through}
 .applied{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#fff;font-weight:600;font-size:12.5px;padding:8px 12px;border-radius:99px;white-space:nowrap}
 .done{display:flex;gap:10px;align-items:center;padding:12px 14px;border-radius:10px;background:var(--green-10);color:#127528;font-weight:600;font-size:13px;margin-bottom:12px}
 .wallet-row{transition:box-shadow .5s,border-color .5s}
@@ -297,7 +342,7 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 .acc-main{display:grid;gap:16px}
 .acc-title{display:flex;justify-content:space-between;align-items:center}
 .acc-title h1{font-family:var(--body);font-weight:600;font-size:20px}
-.bal{justify-self:start;display:flex;align-items:center;gap:14px;background:var(--blue-10);border-radius:12px;padding:14px 20px;transition:box-shadow .6s}
+.bal{display:flex;align-items:center;gap:14px;background:var(--blue-10);border-radius:12px;padding:14px 20px;transition:box-shadow .6s}
 .bal svg{width:40px;height:40px;color:var(--blue)}
 .bal small{display:block;font-size:13px;color:var(--navy);font-weight:500}
 .bal strong{font-family:var(--display);font-size:30px;color:var(--blue);line-height:1.1}
@@ -319,6 +364,39 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 .hrow em{font-style:normal;background:var(--tawny);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;margin-left:6px}
 .hrow.new{background:var(--green-10);animation:flashRow 1.6s ease 2}
 @keyframes flashRow{50%{background:#c8efd0}}
+
+/* ---------- Wallet: pending cashback ---------- */
+.bal-row{display:flex;gap:12px;flex-wrap:wrap;align-items:stretch}
+.pend{display:flex;align-items:center;gap:14px;background:#FDEEE3;border:1.5px dashed var(--tawny);border-radius:12px;padding:12px 18px;animation:pop .5s cubic-bezier(.2,1.3,.4,1)}
+.pend svg{width:34px;height:34px;color:var(--tawny);flex:none}
+.pend small{display:block;font-size:12px;color:var(--navy);font-weight:500}
+.pend strong{display:block;font-family:var(--display);font-size:26px;color:var(--tawny);line-height:1.1}
+.pend-label{display:inline-block;margin-top:6px;background:var(--tawny);color:#fff;font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px}
+.pend.released{background:var(--green-10);border-color:var(--green)}
+.pend.released strong,.pend.released svg{color:var(--green)}
+.pend.released .pend-label{background:var(--green)}
+.hrow.new.pending{background:#FDEEE3}
+.hrow .pendv{color:var(--tawny);font-weight:600}
+.hrow em.st-pending{background:var(--tawny)}
+.hrow em.st-avail{background:var(--green)}
+.pill-pending{display:inline-flex;align-items:center;gap:6px;justify-self:start;background:rgba(255,176,102,.16);color:#FFB066;border:1px solid rgba(255,176,102,.45);font-size:12px;font-weight:600;padding:4px 10px;border-radius:99px}
+
+/* ---------- Intro loader: 3D pendant lamp ---------- */
+#loader{position:fixed;inset:0;z-index:300;background:#000;display:none;overflow:hidden}
+#loader.show{display:block}
+#loader.out{opacity:0;transition:opacity .85s ease}
+.ld-swing{position:absolute;left:50%;top:0;width:240px;margin-left:-120px;transform-origin:50% 0;animation:ldswing 2.6s ease-in-out infinite alternate}
+@keyframes ldswing{from{transform:rotate(-2.5deg)}to{transform:rotate(2.5deg)}}
+.ld-cord{width:2px;height:30vh;margin:0 auto;background:linear-gradient(#000,#3b4b60)}
+.ld-shade{display:block;width:240px;height:auto;margin-top:-2px;position:relative;z-index:2}
+.ld-cone{position:absolute;left:50%;top:calc(30vh + 140px);width:1000px;height:90vh;margin-left:-500px;background:linear-gradient(rgba(255,222,165,.45),rgba(255,222,165,.1) 55%,transparent 85%);clip-path:polygon(43.5% 0,56.5% 0,100% 100%,0 100%);z-index:1}
+.ld-glow{position:absolute;left:50%;top:calc(30vh + 140px);width:700px;height:700px;margin:-350px 0 0 -350px;background:radial-gradient(closest-side,rgba(255,210,135,.6),rgba(255,210,135,0));z-index:0}
+#loader .lit{opacity:0}
+#loader.flicker .lit{animation:flick .7s linear both}
+#loader.on .lit{opacity:1;transition:opacity .25s}
+@keyframes flick{0%{opacity:0}8%{opacity:.9}16%{opacity:.05}30%{opacity:.8}38%{opacity:0}62%{opacity:1}70%{opacity:.15}84%{opacity:.95}100%{opacity:.3}}
+.ld-logo{position:absolute;left:50%;bottom:12vh;width:190px;margin-left:-95px;opacity:0;transform:translateY(12px);transition:opacity .6s .15s,transform .6s .15s}
+#loader.on .ld-logo{opacity:1;transform:none}
 
 /* ===================== PROMO MODALS ===================== */
 .overlay{position:fixed;inset:0;z-index:80;background:rgba(12,35,64,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:grid;place-items:center;padding:16px;overflow-y:auto;animation:fade .25s ease}
@@ -556,8 +634,36 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
       <span id="replay-label">Replay as new visitor</span>
     </button>
   </div>
+  <div class="scen" id="scen" aria-label="Scenario"></div>
   <p class="idea-note" id="idea-note"></p>
 </header>
+
+<!-- Intro loader: pendant lamp switches on, then the site fades in from black -->
+<div id="loader" aria-hidden="true">
+  <div class="ld-swing">
+    <div class="ld-glow lit"></div>
+    <div class="ld-cone lit"></div>
+    <div class="ld-cord"></div>
+    <svg class="ld-shade" viewBox="0 0 240 160">
+      <defs>
+        <linearGradient id="ldDome" x1="0" x2="1">
+          <stop offset="0" stop-color="#050b14"/><stop offset=".22" stop-color="#16345c"/><stop offset=".42" stop-color="#4f86c6"/><stop offset=".5" stop-color="#8fb8e6"/><stop offset=".62" stop-color="#1f4f86"/><stop offset=".85" stop-color="#0a1a2f"/><stop offset="1" stop-color="#03070d"/>
+        </linearGradient>
+        <linearGradient id="ldCap" x1="0" x2="1"><stop offset="0" stop-color="#0b1626"/><stop offset=".45" stop-color="#5d7fa8"/><stop offset="1" stop-color="#08101b"/></linearGradient>
+        <radialGradient id="ldInnerOn" cx=".5" cy=".3" r=".7"><stop offset="0" stop-color="#fffaf0"/><stop offset=".6" stop-color="#ffd793"/><stop offset="1" stop-color="#c98a2c"/></radialGradient>
+        <radialGradient id="ldBulb" cx=".45" cy=".4" r=".6"><stop offset="0" stop-color="#fff"/><stop offset=".7" stop-color="#fff2cf"/><stop offset="1" stop-color="#ffd27a"/></radialGradient>
+      </defs>
+      <rect x="106" y="0" width="28" height="22" rx="5" fill="url(#ldCap)"/>
+      <path d="M22 132 C26 64 74 20 120 20 C166 20 214 64 218 132 Z" fill="url(#ldDome)"/>
+      <path d="M70 52 C86 36 104 30 116 29" stroke="rgba(255,255,255,.35)" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <ellipse cx="120" cy="132" rx="98" ry="15" fill="#06090f"/>
+      <ellipse class="lit" cx="120" cy="132" rx="98" ry="15" fill="url(#ldInnerOn)"/>
+      <circle cx="120" cy="138" r="15" fill="#2a2f38"/>
+      <circle class="lit" cx="120" cy="138" r="15" fill="url(#ldBulb)" style="filter:drop-shadow(0 0 14px #ffd58a)"/>
+    </svg>
+  </div>
+  <img class="ld-logo" src="assets/logo-white.svg" alt="">
+</div>
 
 <!-- ===================== HOMEPAGE CLONE ===================== -->
 <div id="site-top">
@@ -672,17 +778,18 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
         <div class="cb-rays" aria-hidden="true"></div>
         <div class="cb-copy">
           <span class="cb-tag">Lucky order</span>
-          <h2>Your <span class="num" id="thx-cb"></span> is back in your wallet</h2>
-          <p>We refunded this whole order as cashback. Spend it on anything, any time in the next 60 days.</p>
+          <h2>Your <span class="num" id="thx-cb"></span> cashback is reserved</h2>
+          <p>It's waiting in your wallet as pending, and becomes available to spend once order #72728 is delivered.</p>
+          <span class="pill-pending"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Pending on deliver order #72728</span>
         </div>
-        <button class="cb-btn" id="go-wallet" type="button"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M16 13h2M3 10h18"/></svg> Check my wallet balance</button>
+        <button class="cb-btn" id="go-wallet" type="button"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M16 13h2M3 10h18"/></svg> Check my wallet</button>
       </div>
-      <h2 class="thx-h">Order #SL-40817</h2>
+      <h2 class="thx-h">Order #72728</h2>
       <div id="thx-lines" class="thx-lines"></div>
       <h3 class="thx-sub">Personal Info</h3>
       <div class="kv"><div><small>First Name</small>Mark</div><div><small>Last Name</small>Amir</div><div><small>Email Address</small>mark.amir@mitchdesigns.com</div><div><small>Mobile Number</small>+20 01001234567</div></div>
       <h3 class="thx-sub">Shipping Date &amp; Time</h3>
-      <p class="kv-line">16 Oct 2026 | 05:15 pm – 5:45 pm</p>
+      <p class="kv-line">21 Oct 2026 | 05:15 pm – 5:45 pm</p>
       <h3 class="thx-sub">Shipping Info</h3>
       <div class="kv"><div><small>City</small>Cairo</div><div><small>Address</small>14 Abbas el akad street above Total station</div><div><small>Type</small>Apartment</div><div><small>Floor · No.</small>3 · 15</div></div>
       <div id="thx-sum" style="margin-top:14px"></div>
@@ -710,11 +817,15 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
     <main class="acc-main">
       <div class="crumb">Home › <span>My Wallet</span></div>
       <div class="acc-title"><h1>My Wallet</h1><button class="pill-btn" type="button">+ Add Voucher</button></div>
-      <div class="bal" id="bal">
+      <div class="bal-row"><div class="bal" id="bal">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M16 13h2M3 10h18"/></svg>
         <div><small>Wallet Balance</small><strong class="num" id="bal-amt">EGP 40</strong></div>
         <span class="bal-delta num" id="bal-delta"></span>
       </div>
+      <div class="pend" id="pend" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        <div><small id="pend-title">Pending cashback</small><strong class="num" id="pend-amt"></strong><span class="pend-label" id="pend-label">Pending on deliver order #72728</span></div>
+      </div></div>
       <section class="acc-card">
         <h2>Available Vouchers</h2>
         <div class="vrow"><svg class="ico" style="width:28px;height:28px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4.5 9.2 9.2 4.5a1.6 1.6 0 0 0 2.3 2.3l7.7 7.7a1.6 1.6 0 0 0-2.3 2.3l-4.7 4.7a1.6 1.6 0 0 0-2.3-2.3L2.2 11.5a1.6 1.6 0 0 0 2.3-2.3Z"/></svg><div><b>100 EGP Discount</b><small>Valid till 20 Nov 2026</small></div><span>+</span></div>
@@ -724,7 +835,7 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
         <h2>Wallet History</h2>
         <div class="hist">
           <div class="hrow head"><span>Value</span><span>Date</span><span>Reason</span><span>Total</span></div>
-          <div class="hrow new" id="hist-new"><span class="up num" id="hist-amt"></span><span>Oct 14, 2026</span><span>Lucky order cashback · #SL-40817 <em>New</em></span><span class="tot num" id="hist-tot"></span></div>
+          <div class="hrow new" id="hist-new"><span class="up num" id="hist-amt"></span><span>Oct 19, 2026</span><span>Lucky order cashback · #72728 <em id="hist-status" class="st-pending">Pending</em></span><span class="tot num" id="hist-tot"></span></div>
           <div class="hrow"><span class="down num">↓ EGP 150</span><span>Sep 28, 2026</span><span>Order #SL-39902</span><span class="tot num">EGP 40</span></div>
           <div class="hrow"><span class="up num">↑ EGP 100</span><span>Sep 02, 2026</span><span>Voucher #8469353</span><span class="tot num">EGP 190</span></div>
           <div class="hrow"><span class="down num">↓ EGP 120</span><span>Aug 15, 2026</span><span>Order #SL-38411</span><span class="tot num">EGP 90</span></div>
@@ -755,7 +866,7 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
     <div class="progress"><div class="progress-labels"><span>Personal Info</span><span>Pay</span></div><div class="progress-bar"><i></i><i></i></div></div>
     <div class="co-grid">
       <div class="co-card">
-        <div id="done" class="done" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Order #SL-40817 confirmed. We'll message you when it ships.</div>
+        <div id="done" class="done" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Order #72728 confirmed. We'll message you when it ships.</div>
         <h2>Choose Payment Method</h2>
         <div class="payrow on"><span class="r"></span>Credit Card<span class="end"><img src="assets/pay-mastercard.png" alt="Mastercard"><img src="assets/pay-visa.png" alt="Visa"></span></div>
         <div class="field-box"><small>Card Number*</small><span class="num">5642 3652 1556 8963</span></div>
@@ -920,7 +1031,7 @@ function sumRows(withCashback){
   return `<div class="sum"><span>Subtotal</span><span class="num">${egp(t.items)}</span></div>
     <div class="sum"><span>Shipping Fees</span><span class="num">${egp(t.ship)}</span></div>
     ${t.disc ? `<div class="sum disc"><span>${t.label}</span><span class="num">-${egp(t.disc)}</span></div>` : ""}
-    ${withCashback ? `<div class="sum disc"><span>Cashback to wallet</span><span class="num">+${egp(t.total)}</span></div>` : ""}
+    ${withCashback ? `<div class="sum disc"><span>Cashback (pending delivery)</span><span class="num">+${egp(t.total)}</span></div>` : ""}
     <div class="sum total"><span>Sub Total</span><span class="num">${t.disc ? `<s>${egpPlain(t.items + t.ship)}</s>` : ""}${egp(t.total)}</span></div>`;
 }
 function renderTotals(){
@@ -1050,19 +1161,74 @@ function closeOverlay(){ if (!layer.firstChild) return; layer.innerHTML = ""; co
 function closeOverlayQuiet(){ layer.innerHTML = ""; onClose = null; campOpen = false; }
 addEventListener("keydown", e => { if (e.key === "Escape") { if ($("#drawer").classList.contains("open")) toggleDrawer(false); else closeOverlay(); } });
 
-function winCard(p){
-  applyGift(p);
+/* ---------- Scenario state (driven by the presenter chips) ---------- */
+const MAX_SPINS = 3;
+const sc = { auth:"guest", spins:"fresh", quota:"in", cash:"checkout" };
+let loggedIn = false, spinsUsed = 0, pendingGift = null;
+// Overall campaign quota per prize (index matches PRIZES)
+const QUOTA = [ {total:500,left:132}, {total:2000,left:1240}, {total:1000,left:415}, {total:300,left:37}, {total:100,left:9} ];
+const CHECK = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>`;
+const LOCK = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>`;
+const ARROW = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 6 6 6-6 6"/></svg>`;
+const dots3 = used => `<span class="dots3" aria-hidden="true">${[1,2,3].map(n => `<i class="${n <= used ? "on" : ""}"></i>`).join("")}</span>`;
+function triesBlock(used){
+  const left = MAX_SPINS - used;
+  return `<div class="tries">
+    <button class="try-btn" type="button" data-try ${left ? "" : "disabled"}>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>
+      Try again <span class="cnt num">${used}/${MAX_SPINS}</span></button>
+    ${left ? `<small>${left} spin${left > 1 ? "s" : ""} left · a new spin replaces this prize</small>` : `<small class="limit">Limit reached</small>`}
+  </div>`;
+}
+function quotaBlock(idx){
+  const q = QUOTA[idx];
+  return `<div class="quota"><div class="quota-bar"><i style="width:${Math.round((1 - q.left/q.total)*100)}%"></i></div><small><b class="num">${q.left}</b> of ${q.total.toLocaleString("en-US")} left in this campaign</small></div>`;
+}
+function winCard(p, o = {}){
+  const idx = PRIZES.indexOf(p);
+  if (loggedIn) applyGift(p); else { pendingGift = p; gift = null; renderTotals(); }
+  const extras = (o.source === "boxes" ? quotaBlock(idx) : "") + (o.source === "wheel" ? triesBlock(o.used) : "");
+  if (!loggedIn) return `<div class="win">
+    <span class="eyebrow">Congratulations, you won</span>
+    <div class="win-prize">${p.title}</div>
+    <p style="margin:0;color:var(--muted)">${p.desc} Log in to use it; we'll apply it to your cart automatically.</p>
+    <div class="voucher">${TICKET}<div><small>Your gift</small><code>${p.code}</code></div><span class="applied locked">${LOCK}Locked</span></div>
+    <div class="login-box">
+      <b>${LOCK}Log in to use your gift</b>
+      <div class="phone"><span class="cc"><i class="flag"></i>+20</span><input id="login-phone" type="tel" inputmode="tel" value="100 123 4567" aria-label="Mobile number"></div>
+      <button class="btn-blue" type="button" data-login>Log in &amp; claim gift ${ARROW}</button>
+      <small>New to Smart Light? <span class="link-u" data-login>Create an account</span> · we'll hold your gift for 30 minutes.</small>
+    </div>
+    ${extras}
+  </div>`;
   return `<div class="win">
     <span class="eyebrow">Congratulations, you won</span>
     <div class="win-prize">${p.title}</div>
     <p style="margin:0;color:var(--muted)">${p.desc} It's already applied to your cart, so there's no code to copy.</p>
-    <div class="voucher">${TICKET}<div><small>Auto-applied at checkout</small><code>${p.code}</code></div><span class="applied"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>Applied</span></div>
+    <div class="voucher">${TICKET}<div><small>Auto-applied at checkout</small><code>${p.code}</code></div><span class="applied">${CHECK}Applied</span></div>
     <div class="timer">One-time gift · valid for <b class="num" data-expiry>${fmtLeft()}</b></div>
-    <div class="win-actions"><button class="btn-blue" type="button" data-close style="width:100%">Shop Now <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 6 6 6-6 6"/></svg></button></div>
+    ${o.source === "boxes" ? quotaBlock(idx) : ""}
+    <div class="win-actions"><button class="btn-blue" type="button" data-close style="width:100%">Shop Now ${ARROW}</button></div>
+    ${o.source === "wheel" ? triesBlock(o.used) : ""}
   </div>`;
 }
-function wireWin(root){
+function loseCard(p){
+  const q = QUOTA[PRIZES.indexOf(p)];
+  return `<div class="win lose">
+    <span class="eyebrow">Good luck next time</span>
+    <div class="win-prize">${p.title} is out of quota</div>
+    <p style="margin:0;color:var(--muted)">All ${q.total.toLocaleString("en-US")} of this campaign's ${p.title} gifts have been claimed. New boxes open tomorrow, so come back and try again.</p>
+    <div class="quota"><div class="quota-bar"><i style="width:100%"></i></div><small><b class="num">0</b> of ${q.total.toLocaleString("en-US")} left</small></div>
+    <div class="win-actions"><button class="btn-blue" type="button" data-close style="width:100%">Shop Now ${ARROW}</button></div>
+  </div>`;
+}
+function wireWin(root, h = {}){
   $$("[data-close]", root).forEach(b => b.addEventListener("click", closeOverlay));
+  const t = $("[data-try]", root); t && t.addEventListener("click", () => h.onTry && h.onTry());
+  $$("[data-login]", root).forEach(l => l.addEventListener("click", () => {
+    const btn = $("button[data-login]", root); btn.disabled = true; btn.innerHTML = `<span class="spinner"></span> Verifying…`;
+    setTimeout(() => { loggedIn = true; sc.auth = "member"; renderScen(); toast("Logged in as Mark Amir · gift applied"); h.rerender && h.rerender(); }, 900);
+  }));
 }
 
 let launcher;
@@ -1114,7 +1280,7 @@ function openWheel(){
           <span class="eyebrow">Welcome gift</span>
           <h2 id="wheel-title">Spin the wheel, <em>light up</em> your first order</h2>
           <p>Grab the wheel and give it a flick. Wherever the pointer lands, that prize is yours.</p>
-          <span class="fine">One spin per customer. Prizes valid for 48 hours.</span>
+          <span class="fine">3 spins per customer. Your last spin is the prize you keep. Prizes valid for 48 hours.</span>
         </div>
         <div class="stage-dark">
           <div class="wheel-stage" id="stage">
@@ -1158,11 +1324,13 @@ function openWheel(){
     }
     if (!pinRunning){ pinRunning = true; requestAnimationFrame(pinLoop); }
   };
-  if (wheelPlayed !== null){ showResult(wheelPlayed, false); return; }
+  const copy = $("#wheel-copy", ov), modal = copy.closest(".modal");
+  let ready = wheelPlayed === null && spinsUsed < MAX_SPINS;
+  if (!ready) showResult(false);
 
   const angleOf = e => { const b = wheel.getBoundingClientRect(); return Math.atan2(e.clientY - (b.top + b.height/2), e.clientX - (b.left + b.width/2)) * 180/Math.PI; };
   wheel.addEventListener("pointerdown", e => {
-    if (spinning || wheelPlayed !== null) return;
+    if (spinning || !ready) return;
     dragging = true; wheel.setPointerCapture(e.pointerId);
     lastAngle = angleOf(e); samples = [{t:performance.now(), r:rot}];
   });
@@ -1185,9 +1353,10 @@ function openWheel(){
   };
   wheel.addEventListener("pointerup", release);
   wheel.addEventListener("pointercancel", release);
-  hub.addEventListener("click", () => { if (!spinning && wheelPlayed === null) spin(16 + Math.random()*10); });
+  hub.addEventListener("click", () => { if (!spinning && ready) spin(16 + Math.random()*10); });
 
   function spin(v){
+    ready = false; spinsUsed++;
     spinning = true; vel = v; hub.disabled = true; stage.classList.add("spinning"); hint.style.visibility = "hidden";
     let last = performance.now();
     const step = now => {
@@ -1196,17 +1365,27 @@ function openWheel(){
       vel *= Math.pow(Math.abs(vel) > 4 ? 0.986 : 0.972, dt);
       apply(); tickCheck();
       if (Math.abs(vel) > 0.06) requestAnimationFrame(step);
-      else { spinning = false; stage.classList.remove("spinning"); pointer.classList.add("landed"); wheelPlayed = SEG_PRIZE[segAt(rot)]; setTimeout(() => showResult(wheelPlayed, true), 350); }
+      else { spinning = false; stage.classList.remove("spinning"); pointer.classList.remove("landed"); void pointer.getBoundingClientRect(); pointer.classList.add("landed"); wheelPlayed = SEG_PRIZE[segAt(rot)]; setTimeout(() => showResult(true), 350); }
     };
     requestAnimationFrame(step);
   }
-  function showResult(idx, celebrate){
-    const copy = $("#wheel-copy", ov); if (!copy) return;
-    copy.innerHTML = winCard(PRIZES[idx]); wireWin(copy);
-    copy.closest(".modal").classList.add("won");
-    copy.closest(".modal").scrollTop = 0;
+  function showResult(celebrate){
+    const render = () => { copy.innerHTML = winCard(PRIZES[wheelPlayed], { source:"wheel", used:spinsUsed }); wireWin(copy, { rerender:render, onTry:tryAgain }); };
+    render();
+    modal.classList.add("won"); modal.scrollTop = 0;
     hub.disabled = true; hub.textContent = "WON"; hint.style.visibility = "hidden";
     if (celebrate) confetti();
+  }
+  // "Try again": re-arm the wheel; the next result replaces the current prize
+  function tryAgain(){
+    if (spinsUsed >= MAX_SPINS) return;
+    ready = true; modal.classList.remove("won");
+    hub.disabled = false; hub.textContent = "SPIN"; hint.style.visibility = "";
+    copy.innerHTML = `<div class="spin-again"><span class="eyebrow">Spin ${spinsUsed + 1} of ${MAX_SPINS}</span>
+      <h2>Give it <em>another spin</em></h2>
+      <p>Your current prize is <b>${PRIZES[wheelPlayed].title}</b>. Whatever this spin lands on replaces it.</p>
+      ${dots3(spinsUsed)}</div>`;
+    if (isPhone()) stage.scrollIntoView({ block:"center", behavior: reduced ? "auto" : "smooth" });
   }
 }
 
@@ -1247,17 +1426,23 @@ function openBoxes(){
   const reveal = (i, celebrate) => {
     boxes.forEach(b => b.disabled = true);
     const chosen = boxes[i]; chosen.classList.add("chosen","open");
-    if (celebrate){ const r = chosen.getBoundingClientRect(); confetti(r.left + r.width/2, r.top + r.height/3, 140); }
+    if (boxesState.out) chosen.classList.add("out");
+    if (celebrate && !boxesState.out){ const r = chosen.getBoundingClientRect(); confetti(r.left + r.width/2, r.top + r.height/3, 140); }
     setTimeout(() => boxes.forEach((b,j) => { if (j !== i) b.classList.add("open","revealed"); }), celebrate ? 900 : 0);
     setTimeout(() => {
       $("#boxes-head", ov).hidden = true;
-      const w = $("#boxes-win", ov); w.innerHTML = winCard(PRIZES[boxesState.order[i]]); wireWin(w);
+      const w = $("#boxes-win", ov), p = PRIZES[boxesState.order[i]];
+      if (boxesState.out){ w.innerHTML = loseCard(p); wireWin(w); return; }
+      const render = () => { w.innerHTML = winCard(p, { source:"boxes" }); wireWin(w, { rerender:render }); };
+      render();
     }, celebrate ? 1300 : 0);
   };
   if (boxesState.picked !== null){ reveal(boxesState.picked, false); return; }
   boxes.forEach((b,i) => b.addEventListener("click", () => {
     if (boxesState.picked !== null) return;
     boxesState.picked = i; boxes.forEach(x => x.disabled = true);
+    // Scenario: the picked prize has used up its overall quota
+    if (sc.quota === "out"){ boxesState.order[i] = 0; boxesState.out = true; $(".prize-tag", b).textContent = PRIZES[0].short; }
     b.classList.add("shake");
     setTimeout(() => { b.classList.remove("shake"); reveal(i, true); }, reduced ? 0 : 560);
   }));
@@ -1295,38 +1480,49 @@ function openLucky(){
       <div class="lucky-top">
         <div class="rays" aria-hidden="true"></div>
         <button class="x on-dark" type="button" data-close aria-label="Close">${X_ICON}</button>
-        <span class="eyebrow">Order #SL-40817</span>
+        <span class="eyebrow">Order #72728</span>
         <h2 id="lucky-title">It's a <em>lucky order!</em></h2>
         <div class="ticket">
-          <small>Cashback to your wallet</small>
+          <small>Cashback · pending</small>
           <div class="amt num" id="lucky-amt">EGP 0</div>
-          <div class="order-no">100% of this order, back to you</div>
+          <div class="order-no">Pending on deliver order #72728</div>
         </div>
       </div>
       <div class="lucky-body">
-        <p>Your whole order total went straight back into your Smart Light wallet. Use it on your next order, any product.</p>
-        <div class="wallet-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M16 13h2M3 10h18"/></svg>
-          <div><small>Wallet Balance</small><strong class="num" id="lucky-wallet">${egpPlain(WALLET_START)}</strong></div></div>
+        <p>Your whole order total is reserved in your Smart Light wallet. It becomes available to spend once order #72728 is delivered; if the order is cancelled, the cashback is cancelled too.</p>
+        <div class="bal-row" style="justify-content:center">
+          <div class="pend" style="animation:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <div style="text-align:left"><small>Pending cashback</small><strong class="num" id="lucky-wallet">EGP 0</strong><span class="pend-label">Pending on deliver order #72728</span></div></div>
+        </div>
+        <span class="fine">Available balance stays at ${egpPlain(WALLET_START)} until delivery.</span>
         <button class="btn-blue" type="button" data-close style="width:100%">View my order <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 6 6 6-6 6"/></svg></button>
         <span class="fine">1 in every 100 orders wins. Cashback capped at EGP 5,000 and valid for 60 days.</span>
       </div>
     </div>`, () => { $("#wallet-row").classList.add("lit"); setTimeout(() => showView("thanks"), 250); });
   setTimeout(() => confetti(innerWidth/2, innerHeight/3, 200), 300);
   setTimeout(() => countUp($("#lucky-amt", ov), 0, ORDER_TOTAL, 1300, () => {
-    countUp($("#lucky-wallet", ov), WALLET_START, WALLET_START + ORDER_TOTAL, 900);
-    setWallet(WALLET_START + ORDER_TOTAL);
+    countUp($("#lucky-wallet", ov), 0, ORDER_TOTAL, 900);
   }), 600);
 }
 
-$("#go-wallet").addEventListener("click", openWallet);
-function openWallet(){
-  showView("wallet");
-  const bal = $("#bal"), amt = $("#bal-amt"), delta = $("#bal-delta");
+$("#go-wallet").addEventListener("click", () => openWallet("pending"));
+// mode "pending": cashback reserved until order #72728 is delivered; "delivered": it moves into the available balance
+function openWallet(mode = "pending"){
+  showView("wallet"); sc.cash = mode; renderScen();
+  const bal = $("#bal"), amt = $("#bal-amt"), delta = $("#bal-delta"), pend = $("#pend"), row = $("#hist-new"), done = mode === "delivered";
   bal.classList.remove("lit"); delta.classList.remove("show"); amt.textContent = egpPlain(WALLET_START);
-  $("#hist-tot").textContent = egpPlain(WALLET_START + ORDER_TOTAL);
-  const row = $("#hist-new"); row.style.animation = "none"; void row.offsetWidth; row.style.animation = "";
-  setTimeout(() => {
-    delta.textContent = "+" + egpPlain(ORDER_TOTAL) + " cashback"; delta.classList.add("show");
+  pend.hidden = false; pend.classList.toggle("released", done);
+  pend.style.animation = "none"; void pend.offsetWidth; pend.style.animation = "";
+  $("#pend-title").textContent = done ? "Cashback released" : "Pending cashback";
+  $("#pend-amt").textContent = egpPlain(ORDER_TOTAL);
+  $("#pend-label").textContent = done ? "Order #72728 delivered · now available" : "Pending on deliver order #72728";
+  row.classList.toggle("pending", !done);
+  const st = $("#hist-status"); st.className = done ? "st-avail" : "st-pending"; st.textContent = done ? "Available" : "Pending";
+  const ha = $("#hist-amt"); ha.className = done ? "up num" : "pendv num"; ha.textContent = (done ? "↑ " : "+ ") + egpPlain(ORDER_TOTAL);
+  $("#hist-tot").textContent = egpPlain(done ? WALLET_START + ORDER_TOTAL : WALLET_START);
+  row.style.animation = "none"; void row.offsetWidth; row.style.animation = "";
+  if (done) setTimeout(() => {
+    delta.textContent = "+" + egpPlain(ORDER_TOTAL) + " released"; delta.classList.add("show");
     countUp(amt, WALLET_START, WALLET_START + ORDER_TOTAL, 1200, () => { bal.classList.add("lit"); confetti(innerWidth/2, innerHeight/3, 120); });
   }, 500);
 }
@@ -1425,33 +1621,81 @@ syncForm();
    PRESENTER: idea switching
    ========================================================= */
 const NOTES = {
-  wheel:   `<b>Homepage popup.</b> Visitors drag and flick the wheel (or tap Spin). The prize is applied to their cart automatically and shows as a discount at checkout, with a 48-hour countdown. One spin per customer.`,
-  boxes:   `<b>Homepage popup.</b> Six gift boxes, each hiding a prize. The visitor opens one; the gift is applied to their cart automatically and shows as a discount at checkout, with a 48-hour countdown.`,
-  cashback:`<b>At checkout (Pay step).</b> After payment, a random share of orders (e.g. 1 in 100) gets the full order total back as wallet cashback. Press “Place Order”, then follow the order page to the wallet.`,
+  wheel:   `<b>Homepage popup.</b> 3 spins per visitor; each new spin replaces the prize and the counter dims at 3/3. Guests log in inside the popup to claim; logged-in customers get it applied at checkout.`,
+  boxes:   `<b>Homepage popup.</b> Each prize has an overall campaign quota. If the picked prize has run out, the visitor gets a good-luck message instead. Guests log in inside the popup to claim.`,
+  cashback:`<b>At checkout (Pay step).</b> A random share of orders (e.g. 1 in 100) gets the full total back as wallet cashback. It stays <b>pending</b> until order #72728 is delivered, so it can't be spent and the order then cancelled.`,
   popup:   `<b>Homepage popup, managed from the dashboard.</b> Marketing picks text &amp; button, text over a background photo, or a full creative visual, then sets copy, colours, icon, countdown, timing and audience. Open “Popup settings” to edit it live.`,
 };
 const REPLAY = { wheel:"Replay as new visitor", boxes:"Replay as new visitor", cashback:"Reset checkout", popup:"Replay as new visitor" };
 let idea = "wheel", entryTimer;
+
+/* ---------- Scenario chips ---------- */
+const PLAY = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg>`;
+function renderScen(){
+  const chip = (g, v, label, cur) => `<button class="chip-s" type="button" data-g="${g}" data-v="${v}" aria-pressed="${(cur ?? sc[g]) === v}">${label}</button>`;
+  const sep = `<span class="scen-sep"></span>`;
+  let h = `<span class="scen-label">Scenario</span>`;
+  if (idea === "wheel" || idea === "boxes") h += chip("auth","guest","Guest visitor") + chip("auth","member","Logged-in customer") + sep;
+  if (idea === "wheel") h += chip("spins","fresh","First spin") + chip("spins","last","Last spin · 2/3 used") + chip("spins","limit","Limit reached · 3/3") + sep;
+  if (idea === "boxes") h += chip("quota","in","Prize in stock") + chip("quota","out","Prize out of quota") + sep;
+  if (idea === "cashback") h += chip("cash","checkout","Checkout") + chip("cash","pending","Wallet · pending") + chip("cash","delivered","Wallet · order delivered") + sep;
+  if (idea === "popup") h += chip("ptype","text","Text &amp; button", camp.type) + chip("ptype","image","Image background", camp.type) + chip("ptype","visual","Full visual", camp.type) + sep;
+  h += `<button class="chip-s play" type="button" data-loader>${PLAY}Intro loader</button>`;
+  $("#scen").innerHTML = h;
+}
+$("#scen").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.hasAttribute("data-loader")){ playLoader(); setIdea(idea, true); return; }
+  const g = b.dataset.g, v = b.dataset.v;
+  if (g === "ptype"){ camp.type = v; syncForm(); store.set("sl-camp-v3", camp); setIdea("popup", true); return; }
+  sc[g] = v;
+  if (g === "cash"){
+    setIdea("cashback", true);
+    if (v !== "checkout"){ luckyOrder = true; renderTotals(); openWallet(v); }
+    return;
+  }
+  setIdea(idea, true);
+});
+
+/* ---------- Intro loader ---------- */
+let loaderUntil = 0, loaderTimers = [];
+function playLoader(){
+  const L = $("#loader"), T = reduced ? [0, 0, 350, 900] : [700, 1400, 2500, 3350];
+  loaderTimers.forEach(clearTimeout); loaderTimers = [];
+  L.className = "show"; loaderUntil = Date.now() + T[3];
+  loaderTimers.push(setTimeout(() => L.classList.add("flicker"), T[0]));
+  loaderTimers.push(setTimeout(() => { L.classList.remove("flicker"); L.classList.add("on"); }, T[1]));
+  loaderTimers.push(setTimeout(() => L.classList.add("out"), T[2]));
+  loaderTimers.push(setTimeout(() => { L.className = ""; }, T[3]));
+}
+
 function setIdea(next, fresh){
   idea = next;
   clearTimeout(entryTimer); closeOverlayQuiet(); hideLauncher(); toggleDrawer(false); parts = [];
   $$(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.idea === idea));
   $("#idea-note").innerHTML = NOTES[idea];
+  if (idea === "cashback" && fresh) sc.cash = "checkout";
+  renderScen();
   $("#replay-label").textContent = REPLAY[idea];
   showView(idea === "cashback" ? "checkout" : "home");
   $("#admin-toggle").hidden = idea !== "popup";
   store.set("sl-idea", idea);
   if (location.hash.slice(1) !== idea) history.replaceState(null, "", "#" + idea);
-  if (fresh){ gift = null; resetCheckout(); if (idea === "wheel") wheelPlayed = null; if (idea === "boxes") boxesState = null; if (idea === "cashback") resetCheckout(); }
+  if (fresh){
+    gift = null; pendingGift = null; loggedIn = sc.auth === "member"; resetCheckout();
+    if (idea === "wheel"){ spinsUsed = { fresh:0, last:2, limit:3 }[sc.spins]; wheelPlayed = spinsUsed ? [1, 0, 0, 3][spinsUsed] : null; }
+    if (idea === "boxes") boxesState = null;
+  }
   scrollTo({top:0, behavior: reduced ? "auto" : "smooth"});
   if (idea === "home") return;
   requestAnimationFrame(drawPattern);
-  const delay = idea === "popup" ? Math.max(500, (+camp.delay||0)*1000) : 900;
+  const delay = Math.max(idea === "popup" ? Math.max(500, (+camp.delay||0)*1000) : 900, loaderUntil - Date.now() + 300);
   if (idea !== "cashback") entryTimer = setTimeout(() => ({wheel:openWheel, boxes:openBoxes, popup:openCamp})[idea](), delay);
 }
 $$(".tab").forEach(t => t.addEventListener("click", () => setIdea(t.dataset.idea, true)));
-$("#replay").addEventListener("click", () => setIdea(idea, true));
+$("#replay").addEventListener("click", () => { playLoader(); setIdea(idea, true); });
 const fromHash = location.hash.slice(1);
+playLoader();
 setIdea(NOTES[fromHash] ? fromHash : (NOTES[store.get("sl-idea")] ? store.get("sl-idea") : "wheel"), true);
 })();
 </script>
