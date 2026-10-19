@@ -385,7 +385,7 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 .boxes-head h2{font-size:clamp(28px,3.4vw,40px);color:var(--navy)}
 .boxes-head h2 em{font-style:normal;color:var(--blue)}
 .boxes-head p{margin:0;color:var(--muted);max-width:46ch}
-.box-stage{position:relative;border-radius:20px;padding:28px 24px 18px;background:radial-gradient(70% 80% at 50% 30%,#16406f,var(--navy) 75%);overflow:hidden}
+.box-stage{position:relative;border-radius:20px;padding:28px 24px 24px;background:radial-gradient(70% 80% at 50% 30%,#16406f,var(--navy) 75%);overflow:hidden}
 .boxes{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;max-width:540px;margin:0 auto}
 .box{position:relative;aspect-ratio:1/1;border:0;background:transparent;padding:0;max-width:100%}
 .box:not(:disabled):hover .gift{animation:wiggle .5s ease}
@@ -410,7 +410,7 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 .box.chosen .prize-tag{background:var(--tawny);color:#fff;font-size:clamp(14px,2.8vw,18px)}
 .box.revealed{opacity:.45}
 .box.revealed .prize-tag{transform:translate(-50%,0) scale(.85)}
-.boxes-foot{text-align:center;color:var(--blue-30);font-size:12px;font-weight:600;margin-top:10px;position:relative}
+.boxes-win:empty{display:none}
 .boxes-win{max-width:520px;width:100%;margin:0 auto}
 
 /* lucky order */
@@ -1238,7 +1238,6 @@ function openBoxes(){
                 <span class="prize-tag">${PRIZES[pi].short}</span>
               </button>`; }).join("")}
           </div>
-          <div class="boxes-foot" id="boxes-foot">10% · 5% · Free shipping · EGP 100 · 15%</div>
         </div>
         <div class="boxes-win" id="boxes-win"></div>
       </div>
@@ -1251,7 +1250,7 @@ function openBoxes(){
     if (celebrate){ const r = chosen.getBoundingClientRect(); confetti(r.left + r.width/2, r.top + r.height/3, 140); }
     setTimeout(() => boxes.forEach((b,j) => { if (j !== i) b.classList.add("open","revealed"); }), celebrate ? 900 : 0);
     setTimeout(() => {
-      $("#boxes-head", ov).hidden = true; $("#boxes-foot", ov).textContent = "The other boxes held these. Better luck next time!";
+      $("#boxes-head", ov).hidden = true;
       const w = $("#boxes-win", ov); w.innerHTML = winCard(PRIZES[boxesState.order[i]]); wireWin(w);
     }, celebrate ? 1300 : 0);
   };
