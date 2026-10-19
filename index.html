@@ -299,6 +299,16 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 .spin-again h2{font-size:clamp(28px,3.4vw,40px);color:var(--navy)}
 .spin-again h2 em{font-style:normal;color:var(--blue)}
 .spin-again p{margin:0;color:var(--muted)}
+.win.earned{justify-items:center;text-align:center;gap:12px;padding-block:8px}
+.earned-ico{width:64px;height:64px;border-radius:50%;background:var(--blue-10);color:var(--blue);display:grid;place-items:center}
+.earned-ico svg{width:30px;height:30px}
+.win.earned h3{font-family:var(--display);font-weight:700;font-size:clamp(22px,2.6vw,28px);color:var(--navy)}
+.win.earned p{margin:0;color:var(--muted);max-width:36ch}
+/* Wheel result: like the boxes, the popup swaps to show only the offer */
+.modal.won{width:min(520px,100%)}
+.modal.won .split{grid-template-columns:1fr}
+.modal.won .stage-dark{display:none}
+.modal.won .copy{padding:44px 36px 32px}
 .win.lose .eyebrow{color:var(--tawny)}
 .win.lose .win-prize{color:var(--navy);font-size:clamp(28px,4.4vw,40px)}
 .box.out .prize-tag{background:var(--gray-10)!important;color:var(--muted)!important;text-decoration:line-through}
@@ -605,7 +615,6 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
   .overlay > .modal::after,.overlay > .lucky::after,.overlay > .camp::after{content:"";position:absolute;top:8px;left:50%;width:44px;height:5px;margin-left:-22px;border-radius:5px;background:rgba(140,150,165,.55);z-index:6}
   .overlay > .sheet-dragging{animation:none;transition:none}
   .overlay > .sheet-closing{transition:transform .25s ease-in}
-  .modal.won .stage-dark{display:none}
   :root{--gutter:16px}
   .topbar nav a:not(:last-child){display:none}
   .mainhead .logo{height:48px}
@@ -1245,16 +1254,13 @@ function loseCard(p){
     <div class="win-actions"><button class="btn-blue" type="button" data-close style="width:100%">Shop Now ${ARROW}</button></div>
   </div>`;
 }
-// Scenario "Already earned": the account this guest logs into already won a welcome gift earlier
-const EARNED = { idx: 4, on: "12 Oct 2026", until: "26 Oct 2026" };
-function earnedCard(today){
-  const prev = PRIZES[EARNED.idx];
-  applyGift(prev);
+// Scenario "Already earned": the account this guest logs into already won a welcome gift before
+function earnedCard(){
+  gift = null; renderTotals();
   return `<div class="win earned">
-    <span class="eyebrow">Welcome back, Mark</span>
-    <div class="win-prize">Your account already earned a gift</div>
-    <p style="margin:0;color:var(--muted)">Each account can win one welcome gift. You earned <b>${prev.title}</b> on ${EARNED.on}, so today's ${today ? `<b>${today.title}</b>` : "prize"} can't be added. Your earlier gift is still valid and we've applied it to your cart.</p>
-    <div class="voucher">${TICKET}<div><small>Your earned gift · valid until ${EARNED.until}</small><code>${prev.code}</code></div><span class="applied">${CHECK}Applied</span></div>
+    <span class="earned-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="12" rx="2"/><path d="M3 13h18M12 9v12M12 9C9 9 7 4 9.5 4S12 9 12 9Zm0 0c3 0 5-5 2.5-5S12 9 12 9Z"/></svg></span>
+    <h3>You've already earned a gift</h3>
+    <p>Welcome gifts are one per account, and this account has already won one. Thanks for playing!</p>
     <div class="win-actions"><button class="btn-blue" type="button" data-close style="width:100%">Shop Now ${ARROW}</button></div>
   </div>`;
 }
@@ -1267,7 +1273,7 @@ function wireWin(root, h = {}){
       loggedIn = true;
       if (sc.auth === "earned"){                       // account already has a prize: show it instead of today's win
         toast("Logged in as Mark Amir");
-        root.innerHTML = earnedCard(pendingGift); pendingGift = null; wireWin(root);
+        root.innerHTML = earnedCard(); pendingGift = null; wireWin(root);
         h.onEarned && h.onEarned();
         return;
       }
@@ -1410,7 +1416,7 @@ function openWheel(){
       vel *= Math.pow(Math.abs(vel) > 4 ? 0.986 : 0.972, dt);
       apply(); tickCheck();
       if (Math.abs(vel) > 0.06) requestAnimationFrame(step);
-      else { spinning = false; stage.classList.remove("spinning"); pointer.classList.remove("landed"); void pointer.getBoundingClientRect(); pointer.classList.add("landed"); wheelPlayed = SEG_PRIZE[segAt(rot)]; setTimeout(() => showResult(true), 350); }
+      else { spinning = false; stage.classList.remove("spinning"); pointer.classList.remove("landed"); void pointer.getBoundingClientRect(); pointer.classList.add("landed"); wheelPlayed = SEG_PRIZE[segAt(rot)]; setTimeout(() => showResult(true), 900); }
     };
     requestAnimationFrame(step);
   }
