@@ -75,12 +75,22 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 .replay.loader-btn:hover{border-color:var(--tawny)}
 
 /* ===================== SITE CLONE ===================== */
-.flash{background:var(--tawny);color:#fff;display:flex;align-items:center;justify-content:center;gap:16px;padding-block:8px;position:relative;flex-wrap:wrap}
-.flash-title{display:flex;align-items:center;gap:8px;font-family:var(--display);font-weight:600;font-size:20px;line-height:1.4}
+/* flash-sale ticker: two identical groups slide left by half their width, so the loop is seamless */
+.flash{background:var(--tawny);color:#fff;position:relative;height:60px;overflow:hidden;display:flex;align-items:center}
+.flash::before,.flash::after{content:"";position:absolute;top:0;bottom:0;z-index:1;pointer-events:none}
+.flash::before{left:0;width:48px;background:linear-gradient(90deg,var(--tawny),rgba(210,86,0,0))}
+.flash::after{right:0;width:230px;background:linear-gradient(90deg,rgba(210,86,0,0),var(--tawny) 45%)}
+.flash-track{display:flex;width:max-content;animation:flashMarquee 45s linear infinite;will-change:transform}
+.flash:hover .flash-track{animation-play-state:paused}
+@keyframes flashMarquee{to{transform:translateX(-50%)}}
+.flash-group{display:flex;flex:none}
+.flash-item{display:flex;align-items:center;gap:14px;padding-right:56px;white-space:nowrap;font-family:var(--display);font-weight:600;font-size:20px;line-height:1.4;position:relative}
+.flash-item::after{content:"";position:absolute;right:24px;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:rgba(255,255,255,.55)}
+.flash-item svg{flex:none}
 .flash-count{display:flex;gap:6px}
 .flash-count span{background:#fff;color:var(--tawny);border-radius:6px;padding:4px 6px;display:flex;align-items:flex-end;gap:4px;font-weight:700;font-size:16px;line-height:1.3}
 .flash-count small{font-size:10px;font-weight:500}
-.flash-cta{position:absolute;right:52px;background:rgba(255,255,255,.3);border-radius:50px;height:32px;padding:0 15px;display:flex;align-items:center;gap:6px;font-weight:500;font-size:15px}
+.flash-cta{position:absolute;right:24px;z-index:2;background:rgba(255,255,255,.3);border-radius:50px;height:32px;padding:0 15px;display:flex;align-items:center;gap:6px;font-weight:500;font-size:15px}
 .topbar{background:var(--black);color:#fff;display:flex;justify-content:space-between;align-items:center;padding-block:10px;gap:16px}
 .topbar .claim{color:var(--blue-30);font-size:12px;font-weight:600;letter-spacing:.4px;text-transform:uppercase}
 .topbar nav{display:flex;gap:24px;font-weight:500;font-size:14px;align-items:center}
@@ -620,9 +630,13 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
   .p-label{grid-column:1 / -1}
   .idea-note{margin-left:0}
   .stats{gap:24px}
-  .flash-title{font-size:16px}
+  .flash{height:52px}
+  .flash-item{font-size:16px;gap:10px;padding-right:44px}
+  .flash-item::after{right:18px}
+  .flash::after{width:48px}
 }
 @media (prefers-reduced-motion:reduce){
+  .flash-track{animation:none!important}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
 </style>
@@ -683,12 +697,8 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 
 <!-- ===================== HOMEPAGE CLONE ===================== -->
 <div id="site-top">
-  <div class="flash wrap">
-    <div class="flash-title">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M13 5 8 13h4l-1 6 5-8h-4z" fill="#fff"/></svg>
-      FLASH SALE UP TO 70%
-    </div>
-    <div class="flash-count num" id="flash-count"><span><b>2</b><small>Days</small></span><span><b>10</b><small>Hrs</small></span><span><b>33</b><small>Mins</small></span></div>
+  <div class="flash" aria-label="Flash sale up to 70%">
+    <div class="flash-track" id="flash-track" aria-hidden="true"></div>
     <a class="flash-cta" href="#" onclick="return false">Shop Now <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 6 6 6-6 6"/></svg></a>
   </div>
   <div class="topbar wrap">
@@ -1085,10 +1095,16 @@ $$(".dots button").forEach(b => b.addEventListener("click", () => { goSlide(slid
 function restartSlides(){ clearInterval(slideTimer); if (!reduced) slideTimer = setInterval(() => goSlide(slideIdx + 1), 5000); }
 restartSlides();
 
-// flash sale countdown
+// flash sale ticker: one group of repeated items, duplicated so the scroll loops seamlessly
+const FLASH_ITEM = `<span class="flash-item"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M13 5 8 13h4l-1 6 5-8h-4z" fill="#fff"/></svg>FLASH SALE UP TO 70%<span class="flash-count num"><span><b class="fc-d">2</b><small>Days</small></span><span><b class="fc-h">10</b><small>Hrs</small></span><span><b class="fc-m">33</b><small>Mins</small></span></span></span>`;
+const FLASH_GROUP = `<div class="flash-group">${FLASH_ITEM.repeat(4)}</div>`;
+$("#flash-track").innerHTML = FLASH_GROUP + FLASH_GROUP;
 let flashLeft = (2*24 + 10)*3600 + 33*60;
-setInterval(() => { flashLeft--; const d = Math.floor(flashLeft/86400), h = Math.floor(flashLeft%86400/3600), m = Math.floor(flashLeft%3600/60);
-  const b = $$("#flash-count b"); b[0].textContent = d; b[1].textContent = h; b[2].textContent = String(m).padStart(2,"0"); }, 1000);
+const flashParts = () => [Math.floor(flashLeft/86400), Math.floor(flashLeft%86400/3600), String(Math.floor(flashLeft%3600/60)).padStart(2,"0")];
+setInterval(() => {
+  flashLeft--; const [d, h, m] = flashParts();
+  $$(".fc-d").forEach(e => e.textContent = d); $$(".fc-h").forEach(e => e.textContent = h); $$(".fc-m").forEach(e => e.textContent = m);
+}, 1000);
 
 // Sirage-style maze pattern for the About section (drawn, since the brand pattern is artwork)
 function drawPattern(){
@@ -1573,7 +1589,7 @@ function campMarkup(){
   }
   const isImg = camp.type === "image";
   const t = isImg ? THEMES.image : (THEMES[camp.theme] || THEMES.light);
-  const b = $$("#flash-count b").map(x => x.textContent);
+  const b = flashParts();
   const shell = isImg
     ? `<div class="camp camp-bg" style="--shade:${camp.shade};background-image:url('${camp.bg || "assets/elegant.webp"}')" role="dialog" aria-modal="true" aria-labelledby="camp-title">`
     : `<div class="camp" style="background:${t.bg};color:${t.fg}" role="dialog" aria-modal="true" aria-labelledby="camp-title">`;
