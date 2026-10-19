@@ -323,6 +323,7 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 /* ===================== PROMO MODALS ===================== */
 .overlay{position:fixed;inset:0;z-index:80;background:rgba(12,35,64,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:grid;place-items:center;padding:16px;overflow-y:auto;animation:fade .25s ease}
 @keyframes fade{from{opacity:0}}
+@keyframes sheet{from{transform:translateY(100%)}}
 @keyframes pop{from{transform:translateY(24px) scale(.94);opacity:0}}
 .modal{position:relative;width:min(880px,100%);background:#fff;color:var(--text);border-radius:24px;overflow:hidden;box-shadow:0 30px 90px -20px rgba(12,35,64,.55);animation:pop .45s cubic-bezier(.2,1.3,.4,1)}
 .x{position:absolute;top:16px;right:16px;z-index:5;width:36px;height:36px;border-radius:50%;border:0;background:var(--gray-5);color:#6b7682;display:grid;place-items:center}
@@ -504,6 +505,13 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
   .flash-cta{display:none}
 }
 @media (max-width:760px){
+  /* Promotions open as a bottom sheet on phones */
+  .overlay{place-items:end center;padding:0;overflow:hidden}
+  .overlay > .modal,.overlay > .lucky,.overlay > .camp{width:100%;max-height:92vh;max-height:92dvh;overflow-y:auto;overscroll-behavior:contain;border-radius:24px 24px 0 0;padding-bottom:env(safe-area-inset-bottom,0px);animation:sheet .42s cubic-bezier(.2,.9,.3,1);touch-action:pan-y}
+  .overlay > .modal::after,.overlay > .lucky::after,.overlay > .camp::after{content:"";position:absolute;top:8px;left:50%;width:44px;height:5px;margin-left:-22px;border-radius:5px;background:rgba(140,150,165,.55);z-index:6}
+  .overlay > .sheet-dragging{animation:none;transition:none}
+  .overlay > .sheet-closing{transition:transform .25s ease-in}
+  .modal.won .stage-dark{display:none}
   :root{--gutter:16px}
   .topbar nav a:not(:last-child){display:none}
   .mainhead .logo{height:48px}
@@ -1014,7 +1022,29 @@ function openOverlay(inner, closeCb){
   const ov = $("#overlay");
   ov.addEventListener("click", e => { if (e.target === ov) closeOverlay(); });
   $$("[data-close]", ov).forEach(b => b.addEventListener("click", closeOverlay));
+  enableSheetSwipe(ov.firstElementChild);
   return ov;
+}
+// Phones: drag the sheet down from the top (when not scrolled) to dismiss it
+const isPhone = () => matchMedia("(max-width:760px)").matches;
+function enableSheetSwipe(sheet){
+  if (!sheet) return;
+  let y0 = null, dy = 0;
+  sheet.addEventListener("touchstart", e => {
+    if (!isPhone() || sheet.scrollTop > 0 || e.target.closest(".wheel, .box, input, textarea, select")) return;
+    y0 = e.touches[0].clientY; dy = 0; sheet.classList.add("sheet-dragging");
+  }, { passive:true });
+  sheet.addEventListener("touchmove", e => {
+    if (y0 === null) return;
+    dy = Math.max(0, e.touches[0].clientY - y0);
+    sheet.style.transform = `translateY(${dy}px)`;
+  }, { passive:true });
+  sheet.addEventListener("touchend", () => {
+    if (y0 === null) return;
+    y0 = null; sheet.classList.remove("sheet-dragging");
+    if (dy > 110){ sheet.classList.add("sheet-closing"); sheet.style.transform = "translateY(100%)"; setTimeout(closeOverlay, 240); }
+    else { sheet.classList.add("sheet-closing"); sheet.style.transform = ""; setTimeout(() => sheet.classList.remove("sheet-closing"), 260); }
+  });
 }
 function closeOverlay(){ if (!layer.firstChild) return; layer.innerHTML = ""; const cb = onClose; onClose = null; cb && cb(); }
 function closeOverlayQuiet(){ layer.innerHTML = ""; onClose = null; campOpen = false; }
@@ -1173,6 +1203,8 @@ function openWheel(){
   function showResult(idx, celebrate){
     const copy = $("#wheel-copy", ov); if (!copy) return;
     copy.innerHTML = winCard(PRIZES[idx]); wireWin(copy);
+    copy.closest(".modal").classList.add("won");
+    copy.closest(".modal").scrollTop = 0;
     hub.disabled = true; hub.textContent = "WON"; hint.style.visibility = "hidden";
     if (celebrate) confetti();
   }
