@@ -384,7 +384,14 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 .pill-pending{display:inline-flex;align-items:center;gap:6px;justify-self:start;background:rgba(255,176,102,.16);color:#FFB066;border:1px solid rgba(255,176,102,.45);font-size:12px;font-weight:600;padding:4px 10px;border-radius:99px}
 
 /* ---------- Intro loader: 3D pendant lamp ---------- */
-#loader{position:fixed;inset:0;z-index:300;background:#000;display:none;overflow:hidden}
+#loader{position:fixed;inset:0;z-index:300;background:rgba(3,6,11,.88);-webkit-backdrop-filter:blur(18px) saturate(.5);backdrop-filter:blur(18px) saturate(.5);display:none;overflow:hidden;transition:background .8s ease}
+#loader.on{background:rgba(3,6,11,.76)}
+#ld-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#loader.gl .ld-swing{display:none}
+#ld-beam,#ld-halo{position:absolute;pointer-events:none;opacity:0}
+#loader:not(.gl) #ld-beam,#loader:not(.gl) #ld-halo{display:none}
+#ld-beam{height:92vh;transform-origin:50% 0;background:linear-gradient(rgba(255,224,170,.5),rgba(255,224,170,.16) 35%,rgba(255,224,170,.04) 65%,rgba(255,224,170,0) 88%);clip-path:polygon(calc(50% - var(--hw)) 0,calc(50% + var(--hw)) 0,100% 100%,0 100%);filter:blur(5px)}
+#ld-halo{transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(255,218,155,.55),rgba(255,214,150,.18) 38%,rgba(255,214,150,.05) 65%,transparent);mix-blend-mode:screen}
 #loader.show{display:block}
 #loader.out{opacity:0;transition:opacity .85s ease}
 .ld-swing{position:absolute;left:50%;top:0;width:240px;margin-left:-120px;transform-origin:50% 0;animation:ldswing 2.6s ease-in-out infinite alternate}
@@ -642,6 +649,9 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 
 <!-- Intro loader: pendant lamp switches on, then the site fades in from black -->
 <div id="loader" aria-hidden="true">
+  <div id="ld-halo"></div>
+  <div id="ld-beam"></div>
+  <canvas id="ld-canvas"></canvas>
   <div class="ld-swing">
     <div class="ld-glow lit"></div>
     <div class="ld-cone lit"></div>
@@ -968,6 +978,7 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
   <div class="drawer-foot"><button class="btn-blue" id="f-preview" type="button">Show popup</button></div>
 </aside>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (() => {
 "use strict";
@@ -1659,16 +1670,92 @@ $("#scen").addEventListener("click", e => {
   setIdea(idea, true);
 });
 
-/* ---------- Intro loader ---------- */
+/* ---------- Intro loader: realistic 3D pendant lamp (three.js); falls back to the drawn lamp without WebGL ---------- */
+const Lamp3D = (() => {
+  const T = window.THREE; if (!T) return null;
+  let renderer;
+  try { renderer = new T.WebGLRenderer({ canvas: $("#ld-canvas"), antialias: true, alpha: true }); } catch { return null; }
+  if (!renderer.getContext()) return null;
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+  renderer.setClearColor(0x000000, 0);
+  renderer.outputEncoding = T.sRGBEncoding;
+  renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.95;
+  const scene = new T.Scene(), camera = new T.PerspectiveCamera(30, 1, 0.1, 100);
+
+  // Studio environment so the metal shade picks up soft reflections
+  const env = new T.Scene();
+  env.add(new T.Mesh(new T.BoxGeometry(30, 30, 30), new T.MeshBasicMaterial({ color: 0x0a111c, side: T.BackSide })));
+  const panel = (w, h, x, y, z, c) => { const m = new T.Mesh(new T.PlaneGeometry(w, h), new T.MeshBasicMaterial({ color: c, side: T.DoubleSide })); m.position.set(x, y, z); m.lookAt(0, 0, 0); env.add(m); };
+  panel(5, 2.2, -7, 3, 6, 0x9aa8bd); panel(2.2, 6, 8, 0, 4, 0x3f6db0); panel(12, 2, 0, -7, 0, 0x101a28); panel(3, 3, 0, 9, -5, 0x6b7a90);
+  scene.environment = new T.PMREMGenerator(renderer).fromScene(env, 0.04).texture;
+
+  const pivot = new T.Group(); pivot.position.y = 3; scene.add(pivot);       // swing point on the cord
+  const lamp = new T.Group(); lamp.position.y = -3; pivot.add(lamp);
+  const metal = new T.MeshStandardMaterial({ color: 0x0c2a55, metalness: 0.75, roughness: 0.3, envMapIntensity: 0.9 });
+  const dark = new T.MeshStandardMaterial({ color: 0x1b2028, metalness: 0.85, roughness: 0.32 });
+  const brass = new T.MeshStandardMaterial({ color: 0xd4a862, metalness: 1, roughness: 0.22 });
+  // profile runs bottom → top so the lathe's faces point outward (metal outside, white lining inside)
+  const prof = [[1.1,-0.02],[1.04,0.1],[0.92,0.33],[0.74,0.58],[0.52,0.8],[0.32,0.94],[0.2,1.0],[0.16,1.02]].map(([x, y]) => new T.Vector2(x, y));
+  const innerMat = new T.MeshStandardMaterial({ color: 0xf4efe6, roughness: 0.55, metalness: 0, side: T.BackSide, emissive: 0xffcf8a, emissiveIntensity: 0 });
+  const bulbMat = new T.MeshStandardMaterial({ color: 0xf2eee6, roughness: 0.15, metalness: 0, emissive: 0xffe0a6, emissiveIntensity: 0 });
+  const add = (geo, mat, y, rx) => { const m = new T.Mesh(geo, mat); m.position.y = y; if (rx) m.rotation.x = rx; lamp.add(m); return m; };
+  add(new T.LatheGeometry(prof, 160), metal, 0);                                                   // shade
+  add(new T.LatheGeometry(prof.map(v => new T.Vector2(v.x * 0.975, v.y - 0.012)), 160), innerMat, 0); // white inside
+  add(new T.TorusGeometry(1.1, 0.024, 16, 180), brass, -0.02, Math.PI / 2);                         // rim
+  add(new T.CylinderGeometry(0.17, 0.21, 0.3, 48), dark, 1.15);                                     // cap
+  add(new T.TorusGeometry(0.19, 0.018, 12, 64), brass, 1.02, Math.PI / 2);
+  add(new T.CylinderGeometry(0.016, 0.016, 4.2, 12), new T.MeshStandardMaterial({ color: 0x0b0d10, roughness: 0.7 }), 3.4); // cord
+  add(new T.CylinderGeometry(0.11, 0.12, 0.34, 32), brass, 0.66);                                   // socket
+  add(new T.CylinderGeometry(0.11, 0.17, 0.24, 32), bulbMat, 0.42);                                 // bulb neck
+  add(new T.SphereGeometry(0.27, 64, 48), bulbMat, 0.18);                                           // bulb
+
+  scene.add(new T.HemisphereLight(0x7fa8e0, 0x05070b, 0.35));
+  const key = new T.DirectionalLight(0xffffff, 0.9); key.position.set(-3, 3, 4); scene.add(key);
+  const back = new T.DirectionalLight(0x5c8fd6, 1.1); back.position.set(4, 1, -3); scene.add(back);
+  const bulbLight = new T.PointLight(0xffd59a, 0, 8, 2); bulbLight.position.y = 0.2; lamp.add(bulbLight);
+
+  const beamEl = $("#ld-beam"), haloEl = $("#ld-halo");
+  let raf = 0, t0 = 0, mode = "off", modeAt = 0, level = 0;
+  const FLICK = [0, .9, .05, .8, 0, 0, 1, .15, .95, .3];
+  function resize(){
+    const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.position.set(0, -0.9, 15 * Math.max(1, 0.8 / camera.aspect));
+    camera.lookAt(0, -0.6, 0); camera.updateProjectionMatrix();
+  }
+  function frame(now){
+    const t = (now - t0) / 1000;
+    pivot.rotation.z = Math.sin(t * 1.5) * 0.045; pivot.rotation.x = Math.sin(t * 1.1) * 0.03;
+    const target = mode === "on" ? 1 : mode === "flicker" ? FLICK[Math.min(FLICK.length - 1, Math.max(0, Math.floor((now - modeAt) / 70)))] : 0;
+    level += (target - level) * (mode === "flicker" ? 1 : 0.16);
+    if (!isFinite(level)) level = 0;
+    bulbMat.emissiveIntensity = level * 3.4; innerMat.emissiveIntensity = level * 0.85; bulbLight.intensity = level * 7;
+    // CSS beam + halo follow the rim's on-screen position (soft gradients blend better than WebGL sprites)
+    const rim = lamp.localToWorld(new T.Vector3(0, -0.02, 0)).project(camera), edge = lamp.localToWorld(new T.Vector3(1.1, -0.02, 0)).project(camera);
+    const W = innerWidth, H = innerHeight, x = (rim.x + 1) / 2 * W, y = (1 - rim.y) / 2 * H, hw = Math.abs(edge.x - rim.x) / 2 * W;
+    beamEl.style.cssText = `left:${x}px;top:${y - 2}px;width:${hw * 6.4}px;--hw:${hw * 0.96}px;opacity:${level * 0.95};transform:translateX(-50%) rotate(${-pivot.rotation.z * 57.3}deg)`;
+    haloEl.style.cssText = `left:${x}px;top:${y}px;width:${hw * 7}px;height:${hw * 7}px;opacity:${level}`;
+    renderer.render(scene, camera);
+    raf = requestAnimationFrame(frame);
+  }
+  addEventListener("resize", () => raf && resize());
+  return {
+    start(){ resize(); mode = "off"; level = 0; t0 = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(frame); },
+    set(m){ mode = m; modeAt = performance.now(); },
+    stop(){ cancelAnimationFrame(raf); raf = 0; }
+  };
+})();
+
 let loaderUntil = 0, loaderTimers = [];
 function playLoader(){
-  const L = $("#loader"), T = reduced ? [0, 0, 350, 900] : [700, 1400, 2500, 3350];
+  const L = $("#loader"), T = reduced ? [0, 0, 400, 1000] : [800, 1500, 2900, 3750];
   loaderTimers.forEach(clearTimeout); loaderTimers = [];
-  L.className = "show"; loaderUntil = Date.now() + T[3];
-  loaderTimers.push(setTimeout(() => L.classList.add("flicker"), T[0]));
-  loaderTimers.push(setTimeout(() => { L.classList.remove("flicker"); L.classList.add("on"); }, T[1]));
+  L.className = "show" + (Lamp3D ? " gl" : ""); loaderUntil = Date.now() + T[3];
+  Lamp3D && Lamp3D.start();
+  loaderTimers.push(setTimeout(() => { L.classList.add("flicker"); Lamp3D && Lamp3D.set("flicker"); }, T[0]));
+  loaderTimers.push(setTimeout(() => { L.classList.remove("flicker"); L.classList.add("on"); Lamp3D && Lamp3D.set("on"); }, T[1]));
+  if (/holdloader/.test(location.search)){ loaderUntil = Infinity; return; }   // design review: keep the lamp on screen
   loaderTimers.push(setTimeout(() => L.classList.add("out"), T[2]));
-  loaderTimers.push(setTimeout(() => { L.className = ""; }, T[3]));
+  loaderTimers.push(setTimeout(() => { L.className = ""; Lamp3D && Lamp3D.stop(); }, T[3]));
 }
 
 function setIdea(next, fresh){
