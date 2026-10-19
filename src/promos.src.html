@@ -64,7 +64,7 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 .scen{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px}
 .scen-label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue-30);font-weight:700;margin-right:4px}
 .scen-sep{width:1px;height:20px;background:#2a3a50;margin:0 4px}
-.chip-s{border:1px solid #2a3a50;background:transparent;color:#cfe0f2;border-radius:99px;padding:6px 12px;font-size:12px;font-weight:600;display:inline-flex;gap:6px;align-items:center;transition:background .15s,color .15s,border-color .15s}
+.chip-s{white-space:nowrap;flex:none;border:1px solid #2a3a50;background:transparent;color:#cfe0f2;border-radius:99px;padding:6px 12px;font-size:12px;font-weight:600;display:inline-flex;gap:6px;align-items:center;transition:background .15s,color .15s,border-color .15s}
 .chip-s:hover{border-color:var(--blue-80);color:#fff}
 .chip-s[aria-pressed="true"]{background:#fff;color:var(--navy);border-color:#fff}
 .chip-s.play{border-color:var(--tawny);color:#ffb066}
@@ -391,7 +391,7 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 #ld-beam{height:92vh;transform-origin:50% 0;background:linear-gradient(rgba(255,224,170,.5),rgba(255,224,170,.16) 35%,rgba(255,224,170,.04) 65%,rgba(255,224,170,0) 88%);clip-path:polygon(calc(50% - var(--hw)) 0,calc(50% + var(--hw)) 0,100% 100%,0 100%);filter:blur(5px)}
 #ld-halo{transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(255,218,155,.55),rgba(255,214,150,.18) 38%,rgba(255,214,150,.05) 65%,transparent);mix-blend-mode:screen}
 #loader.show{display:block}
-#loader.out{opacity:0;transition:opacity .85s ease}
+#loader.out{opacity:0;transition:opacity .75s ease}
 .ld-swing{position:absolute;left:50%;top:0;width:240px;margin-left:-120px;transform-origin:50% 0;animation:ldswing 2.6s ease-in-out infinite alternate}
 @keyframes ldswing{from{transform:rotate(-2.5deg)}to{transform:rotate(2.5deg)}}
 .ld-cord{width:2px;height:30vh;margin:0 auto;background:linear-gradient(#000,#3b4b60)}
@@ -400,7 +400,7 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 .ld-glow{position:absolute;left:50%;top:calc(30vh + 140px);width:700px;height:700px;margin:-350px 0 0 -350px;background:radial-gradient(closest-side,rgba(255,210,135,.6),rgba(255,210,135,0));z-index:0}
 #loader .lit{opacity:0}
 #loader.flicker .lit{animation:flick .7s linear both}
-#loader.on .lit{opacity:1;transition:opacity .25s}
+#loader.on .lit{opacity:1;transition:opacity .08s}
 @keyframes flick{0%{opacity:0}8%{opacity:.9}16%{opacity:.05}30%{opacity:.8}38%{opacity:0}62%{opacity:1}70%{opacity:.15}84%{opacity:.95}100%{opacity:.3}}
 .ld-logo{position:absolute;left:50%;bottom:12vh;width:190px;margin-left:-95px;opacity:0;transform:translateY(12px);transition:opacity .6s .15s,transform .6s .15s}
 #loader.on .ld-logo{opacity:1;transform:none}
@@ -1724,7 +1724,7 @@ const Lamp3D = (() => {
     const t = (now - t0) / 1000;
     pivot.rotation.z = Math.sin(t * 1.5) * 0.045; pivot.rotation.x = Math.sin(t * 1.1) * 0.03;
     const target = mode === "on" ? 1 : mode === "flicker" ? FLICK[Math.min(FLICK.length - 1, Math.max(0, Math.floor((now - modeAt) / 70)))] : 0;
-    level += (target - level) * (mode === "flicker" ? 1 : 0.16);
+    level += (target - level) * (mode === "off" ? 0.16 : 0.55);
     if (!isFinite(level)) level = 0;
     bulbMat.emissiveIntensity = level * 3.4; innerMat.emissiveIntensity = level * 0.85; bulbLight.intensity = level * 7;
     // CSS beam + halo follow the rim's on-screen position (soft gradients blend better than WebGL sprites)
@@ -1743,17 +1743,40 @@ const Lamp3D = (() => {
   };
 })();
 
+/* Light-switch "tick", synthesised with Web Audio (no sound file). Browsers only allow sound after the
+   visitor has interacted with the page, so the very first load is silent; replays and later visits click. */
+let actx = null;
+function audio(){
+  try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === "suspended") actx.resume(); } catch {}
+  return actx;
+}
+addEventListener("pointerdown", audio, { once: true });
+function switchTick(){
+  const a = audio(); if (!a || a.state !== "running") return;
+  const t = a.currentTime;
+  const len = Math.floor(a.sampleRate * 0.025), buf = a.createBuffer(1, len, a.sampleRate), d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 6);       // sharp contact click
+  const src = a.createBufferSource(), hp = a.createBiquadFilter(), g = a.createGain();
+  src.buffer = buf; hp.type = "highpass"; hp.frequency.value = 1800; g.gain.value = 0.8;
+  src.connect(hp).connect(g).connect(a.destination); src.start(t);
+  const o = a.createOscillator(), og = a.createGain();                                          // body of the switch
+  o.type = "square"; o.frequency.setValueAtTime(190, t); o.frequency.exponentialRampToValueAtTime(55, t + 0.05);
+  og.gain.setValueAtTime(0.22, t); og.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+  o.connect(og).connect(a.destination); o.start(t); o.stop(t + 0.08);
+}
+
 let loaderUntil = 0, loaderTimers = [];
 function playLoader(){
-  const L = $("#loader"), T = reduced ? [0, 0, 400, 1000] : [800, 1500, 2900, 3750];
+  // off → tick, light on → the site opens through the fade
+  const L = $("#loader"), T = reduced ? [0, 300, 800] : [750, 1550, 2350];
   loaderTimers.forEach(clearTimeout); loaderTimers = [];
-  L.className = "show" + (Lamp3D ? " gl" : ""); loaderUntil = Date.now() + T[3];
+  audio();
+  L.className = "show" + (Lamp3D ? " gl" : ""); loaderUntil = Date.now() + T[2];
   Lamp3D && Lamp3D.start();
-  loaderTimers.push(setTimeout(() => { L.classList.add("flicker"); Lamp3D && Lamp3D.set("flicker"); }, T[0]));
-  loaderTimers.push(setTimeout(() => { L.classList.remove("flicker"); L.classList.add("on"); Lamp3D && Lamp3D.set("on"); }, T[1]));
+  loaderTimers.push(setTimeout(() => { switchTick(); L.classList.add("on"); Lamp3D && Lamp3D.set("on"); }, T[0]));
   if (/holdloader/.test(location.search)){ loaderUntil = Infinity; return; }   // design review: keep the lamp on screen
-  loaderTimers.push(setTimeout(() => L.classList.add("out"), T[2]));
-  loaderTimers.push(setTimeout(() => { L.className = ""; Lamp3D && Lamp3D.stop(); }, T[3]));
+  loaderTimers.push(setTimeout(() => L.classList.add("out"), T[1]));
+  loaderTimers.push(setTimeout(() => { L.className = ""; Lamp3D && Lamp3D.stop(); }, T[2]));
 }
 
 function setIdea(next, fresh){
