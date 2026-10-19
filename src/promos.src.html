@@ -649,10 +649,6 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
       <button class="tab" role="tab" id="tab-cashback" data-idea="cashback"><span class="n">3</span>Lucky<span class="lbl-long">&nbsp;cashback</span></button>
       <button class="tab" role="tab" id="tab-popup" data-idea="popup"><span class="n">4</span>Campaign<span class="lbl-long">&nbsp;popup</span></button>
     </div>
-    <button class="replay" id="replay" type="button">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></svg>
-      <span id="replay-label">Replay as new visitor</span>
-    </button>
   </div>
   <div class="p-row">
     <span class="p-label">Scenario</span>
@@ -1247,12 +1243,34 @@ function loseCard(p){
     <div class="win-actions"><button class="btn-blue" type="button" data-close style="width:100%">Shop Now ${ARROW}</button></div>
   </div>`;
 }
+// Scenario "Already earned": the account this guest logs into already won a welcome gift earlier
+const EARNED = { idx: 4, on: "12 Oct 2026", until: "26 Oct 2026" };
+function earnedCard(today){
+  const prev = PRIZES[EARNED.idx];
+  applyGift(prev);
+  return `<div class="win earned">
+    <span class="eyebrow">Welcome back, Mark</span>
+    <div class="win-prize">Your account already earned a gift</div>
+    <p style="margin:0;color:var(--muted)">Each account can win one welcome gift. You earned <b>${prev.title}</b> on ${EARNED.on}, so today's ${today ? `<b>${today.title}</b>` : "prize"} can't be added. Your earlier gift is still valid and we've applied it to your cart.</p>
+    <div class="voucher">${TICKET}<div><small>Your earned gift · valid until ${EARNED.until}</small><code>${prev.code}</code></div><span class="applied">${CHECK}Applied</span></div>
+    <div class="win-actions"><button class="btn-blue" type="button" data-close style="width:100%">Shop Now ${ARROW}</button></div>
+  </div>`;
+}
 function wireWin(root, h = {}){
   $$("[data-close]", root).forEach(b => b.addEventListener("click", closeOverlay));
   const t = $("[data-try]", root); t && t.addEventListener("click", () => h.onTry && h.onTry());
   $$("[data-login]", root).forEach(l => l.addEventListener("click", () => {
     const btn = $("button[data-login]", root); btn.disabled = true; btn.innerHTML = `<span class="spinner"></span> Opening login…`;
-    setTimeout(() => { loggedIn = true; sc.auth = "member"; renderScen(); toast("Logged in as Mark Amir · gift applied"); h.rerender && h.rerender(); }, 900);
+    setTimeout(() => {
+      loggedIn = true;
+      if (sc.auth === "earned"){                       // account already has a prize: show it instead of today's win
+        toast("Logged in as Mark Amir");
+        root.innerHTML = earnedCard(pendingGift); pendingGift = null; wireWin(root);
+        h.onEarned && h.onEarned();
+        return;
+      }
+      sc.auth = "member"; renderScen(); toast("Logged in as Mark Amir · gift applied"); h.rerender && h.rerender();
+    }, 900);
   }));
 }
 
@@ -1395,7 +1413,7 @@ function openWheel(){
     requestAnimationFrame(step);
   }
   function showResult(celebrate){
-    const render = () => { copy.innerHTML = winCard(PRIZES[wheelPlayed], { source:"wheel", used:spinsUsed }); wireWin(copy, { rerender:render, onTry:tryAgain }); };
+    const render = () => { copy.innerHTML = winCard(PRIZES[wheelPlayed], { source:"wheel", used:spinsUsed }); wireWin(copy, { rerender:render, onTry:tryAgain, onEarned:() => { spinsUsed = MAX_SPINS; ready = false; } }); };
     render();
     modal.classList.add("won"); modal.scrollTop = 0;
     hub.disabled = true; hub.textContent = "WON"; hint.style.visibility = "hidden";
@@ -1647,12 +1665,11 @@ syncForm();
    PRESENTER: idea switching
    ========================================================= */
 const NOTES = {
-  wheel:   `<b>Homepage popup.</b> 3 spins per visitor; each new spin replaces the prize and the counter dims at 3/3. Guests log in inside the popup to claim; logged-in customers get it applied at checkout.`,
-  boxes:   `<b>Homepage popup.</b> Each prize has an overall campaign quota. If the picked prize has run out, the visitor gets a good-luck message instead. Guests log in inside the popup to claim.`,
+  wheel:   `<b>Homepage popup.</b> 3 spins per visitor; each new spin replaces the prize and the counter dims at 3/3. Guests log in inside the popup to claim; logged-in customers get it applied at checkout. <b>Already earned</b>: a guest wins, then logs into an account that won before.`,
+  boxes:   `<b>Homepage popup.</b> Each prize has an overall campaign quota. If the picked prize has run out, the visitor gets a good-luck message instead. Guests log in inside the popup to claim. <b>Already earned</b>: a guest wins, then logs into an account that won before.`,
   cashback:`<b>At checkout (Pay step).</b> A random share of orders (e.g. 1 in 100) gets the full total back as wallet cashback. It stays <b>pending</b> until order #72728 is delivered, so it can't be spent and the order then cancelled.`,
   popup:   `<b>Homepage popup, managed from the dashboard.</b> Marketing picks text &amp; button, text over a background photo, or a full creative visual, then sets copy, colours, icon, countdown, timing and audience. Open “Popup settings” to edit it live.`,
 };
-const REPLAY = { wheel:"Replay as new visitor", boxes:"Replay as new visitor", cashback:"Reset checkout", popup:"Replay as new visitor" };
 let idea = "wheel", entryTimer;
 
 /* ---------- Scenario chips ---------- */
@@ -1660,7 +1677,7 @@ function renderScen(){
   const chip = (g, v, label, cur) => `<button class="chip-s" type="button" data-g="${g}" data-v="${v}" aria-pressed="${(cur ?? sc[g]) === v}">${label}</button>`;
   const group = (...chips) => `<div class="seg-g">${chips.join("")}</div>`;
   let h = "";
-  if (idea === "wheel" || idea === "boxes") h += group(chip("auth","guest","Guest visitor"), chip("auth","member","Logged-in customer"));
+  if (idea === "wheel" || idea === "boxes") h += group(chip("auth","guest","Guest visitor"), chip("auth","member","Logged-in customer"), chip("auth","earned","Already earned"));
   if (idea === "wheel") h += group(chip("spins","fresh","First spin"), chip("spins","last","Last spin · 2/3"), chip("spins","limit","Limit reached · 3/3"));
   if (idea === "boxes") h += group(chip("quota","in","Prize in stock"), chip("quota","out","Prize out of quota"));
   if (idea === "cashback") h += group(chip("cash","checkout","Checkout"), chip("cash","pending","Wallet · pending"), chip("cash","delivered","Wallet · delivered"));
@@ -1815,7 +1832,6 @@ function setIdea(next, fresh){
   $("#idea-note").innerHTML = NOTES[idea];
   if (idea === "cashback" && fresh) sc.cash = "checkout";
   renderScen();
-  $("#replay-label").textContent = REPLAY[idea];
   showView(idea === "cashback" ? "checkout" : "home");
   $("#admin-toggle").hidden = idea !== "popup";
   store.set("sl-idea", idea);
@@ -1832,7 +1848,6 @@ function setIdea(next, fresh){
   if (idea !== "cashback") entryTimer = setTimeout(() => ({wheel:openWheel, boxes:openBoxes, popup:openCamp})[idea](), delay);
 }
 $$(".tab").forEach(t => t.addEventListener("click", () => setIdea(t.dataset.idea, true)));
-$("#replay").addEventListener("click", () => { playLoader(); setIdea(idea, true); });
 const fromHash = location.hash.slice(1);
 playLoader();
 setIdea(NOTES[fromHash] ? fromHash : (NOTES[store.get("sl-idea")] ? store.get("sl-idea") : "wheel"), true);
