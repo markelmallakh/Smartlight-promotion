@@ -404,6 +404,9 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 @keyframes flick{0%{opacity:0}8%{opacity:.9}16%{opacity:.05}30%{opacity:.8}38%{opacity:0}62%{opacity:1}70%{opacity:.15}84%{opacity:.95}100%{opacity:.3}}
 .ld-logo{position:absolute;left:50%;bottom:12vh;width:190px;margin-left:-95px;opacity:0;transform:translateY(12px);transition:opacity .6s .15s,transform .6s .15s}
 #loader.on .ld-logo{opacity:1;transform:none}
+/* Arabic tagline revealed right-to-left as the light comes on */
+.ld-tag{position:absolute;left:0;right:0;bottom:calc(12vh + 96px);margin:0;text-align:center;font-family:"Noto Kufi Arabic","Montserrat",system-ui,sans-serif;font-weight:600;font-size:clamp(28px,4.2vw,46px);line-height:1.4;color:#FFF3DC;text-shadow:0 0 22px rgba(255,205,130,.65),0 2px 10px rgba(0,0,0,.5);opacity:0;clip-path:inset(0 0 0 100%)}
+#loader.on .ld-tag{opacity:1;clip-path:inset(0 0 0 0);transition:clip-path .8s cubic-bezier(.3,.7,.2,1) .05s,opacity .25s}
 
 /* ===================== PROMO MODALS ===================== */
 .overlay{position:fixed;inset:0;z-index:80;background:rgba(12,35,64,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:grid;place-items:center;padding:16px;overflow-y:auto;animation:fade .25s ease}
@@ -672,6 +675,7 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
       <circle class="lit" cx="120" cy="138" r="15" fill="url(#ldBulb)" style="filter:drop-shadow(0 0 14px #ffd58a)"/>
     </svg>
   </div>
+  <p class="ld-tag" dir="rtl" lang="ar">نورها مع سيراج</p>
   <img class="ld-logo" src="assets/logo-white.svg" alt="">
 </div>
 
@@ -1768,7 +1772,7 @@ function switchTick(){
 let loaderUntil = 0, loaderTimers = [];
 function playLoader(){
   // off → tick, light on → the site opens through the fade
-  const L = $("#loader"), T = reduced ? [0, 300, 800] : [750, 1550, 2350];
+  const L = $("#loader"), T = reduced ? [0, 900, 1400] : [750, 2300, 3100];
   loaderTimers.forEach(clearTimeout); loaderTimers = [];
   audio();
   L.className = "show" + (Lamp3D ? " gl" : ""); loaderUntil = Date.now() + T[2];
