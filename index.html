@@ -311,7 +311,7 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 .modal.won .copy{padding:44px 36px 32px}
 .win.lose .eyebrow{color:var(--tawny)}
 .win.lose .win-prize{color:var(--navy);font-size:clamp(28px,4.4vw,40px)}
-.box.out .prize-tag{background:var(--gray-10)!important;color:var(--muted)!important;text-decoration:line-through}
+.box.out .prize-tag{color:var(--muted)!important;text-decoration:line-through}
 .applied{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#fff;font-weight:600;font-size:12.5px;padding:8px 12px;border-radius:99px;white-space:nowrap}
 .done{display:flex;gap:10px;align-items:center;padding:12px 14px;border-radius:10px;background:var(--green-10);color:#127528;font-weight:600;font-size:13px;margin-bottom:12px}
 .wallet-row{transition:box-shadow .5s,border-color .5s}
@@ -489,30 +489,23 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 .boxes-head h2 em{font-style:normal;color:var(--blue)}
 .boxes-head p{margin:0;color:var(--muted);max-width:46ch}
 .box-stage{position:relative;border-radius:20px;padding:28px 24px 24px;background:radial-gradient(70% 80% at 50% 30%,#16406f,var(--navy) 75%);overflow:hidden}
-.boxes{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;max-width:540px;margin:0 auto}
-.box{position:relative;aspect-ratio:1/1;border:0;background:transparent;padding:0;max-width:100%}
-.box:not(:disabled):hover .gift{animation:wiggle .5s ease}
+.boxes{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 18px;max-width:480px;margin:0 auto}
+/* Floor lamps: off (blue shade, "?" badge) → switched on (warm shade, beam, floor pool, prize on the shade) */
+.box{position:relative;aspect-ratio:120/176;border:0;background:transparent;padding:0;max-width:100%}
 .box:disabled{cursor:default}
-@keyframes wiggle{25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}
-.gift{position:absolute;inset:0}
-.gift-body{position:absolute;left:14%;right:14%;bottom:6%;height:56%;border-radius:8px;background:linear-gradient(90deg,transparent 43%,var(--rb) 43%,var(--rb) 57%,transparent 57%),var(--c);box-shadow:inset 0 -10px 0 rgba(0,0,0,.12);display:grid;place-items:center}
-.gift-body span{font-family:var(--display);font-weight:700;font-size:clamp(18px,3.6vw,28px);color:var(--q);background:#fff;width:1.6em;height:1.6em;border-radius:50%;display:grid;place-items:center;box-shadow:0 0 0 3px var(--rb),0 4px 10px rgba(12,35,64,.35)}
-.lid{position:absolute;left:8%;right:8%;top:22%;height:20%;transition:transform .6s cubic-bezier(.3,1.5,.5,1),opacity .6s;z-index:2}
-.lid-top{position:absolute;inset:0;border-radius:7px;background:linear-gradient(90deg,transparent 42%,var(--rb) 42%,var(--rb) 58%,transparent 58%),var(--c2);box-shadow:0 6px 0 rgba(0,0,0,.12)}
-.bow{position:absolute;left:50%;bottom:92%;width:46%;height:70%;transform:translateX(-50%)}
-.bow::before,.bow::after{content:"";position:absolute;bottom:0;width:50%;height:100%;border:6px solid var(--rb);border-radius:50% 50% 10% 50%}
-.bow::before{left:0;transform:rotate(-18deg);transform-origin:right bottom}
-.bow::after{right:0;transform:scaleX(-1) rotate(-18deg);transform-origin:left bottom}
-.beam{position:absolute;left:18%;right:18%;bottom:50%;height:0;background:linear-gradient(0deg,rgba(204,225,244,.9),transparent);clip-path:polygon(18% 100%,82% 100%,100% 0,0 0);transition:height .5s ease .15s;pointer-events:none}
-.prize-tag{position:absolute;left:50%;top:22%;transform:translate(-50%,40%) scale(.3);opacity:0;z-index:3;background:#fff;color:var(--navy);font-family:var(--display);font-weight:700;padding:6px 10px;border-radius:8px;white-space:nowrap;font-size:clamp(12px,2.4vw,15px);transition:transform .5s cubic-bezier(.2,1.6,.4,1) .2s,opacity .3s .2s;box-shadow:0 8px 24px -6px rgba(0,0,0,.5)}
-.box.shake .gift{animation:shake .55s ease}
-@keyframes shake{20%{transform:translateX(-6px) rotate(-4deg)}40%{transform:translateX(6px) rotate(4deg)}60%{transform:translateX(-4px) rotate(-2deg)}80%{transform:translateX(4px) rotate(2deg)}}
-.box.open .lid{transform:translate(34%,-120%) rotate(32deg);opacity:0}
-.box.open .beam{height:90%}
-.box.open .prize-tag{opacity:1;transform:translate(-50%,-30%) scale(1)}
-.box.chosen .prize-tag{background:var(--tawny);color:#fff;font-size:clamp(14px,2.8vw,18px)}
-.box.revealed{opacity:.45}
-.box.revealed .prize-tag{transform:translate(-50%,0) scale(.85)}
+.lamp-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;transform-origin:50% 100%}
+.box:not(:disabled):hover .lamp-svg{animation:lampSway .7s ease}
+@keyframes lampSway{30%{transform:rotate(-2.5deg)}70%{transform:rotate(2deg)}}
+.lamp-shade-on,.lamp-bulb-on,.lamp-cone,.lamp-pool{opacity:0;transition:opacity .5s cubic-bezier(.25,1,.5,1)}
+.box.open .lamp-shade-on,.box.open .lamp-bulb-on,.box.open .lamp-cone,.box.open .lamp-pool{opacity:1}
+.box.shake .lamp-shade-on,.box.shake .lamp-bulb-on,.box.shake .lamp-cone{animation:lampFlick .45s steps(1) both}
+@keyframes lampFlick{0%{opacity:.9}18%{opacity:.1}34%{opacity:.8}50%{opacity:0}70%{opacity:1}85%{opacity:.3}100%{opacity:1}}
+.lamp-q{position:absolute;left:50%;top:21%;transform:translate(-50%,-50%);width:clamp(26px,5.4vw,38px);aspect-ratio:1/1;border-radius:50%;background:#fff;color:var(--blue);font-family:var(--display);font-weight:700;font-size:clamp(15px,3vw,21px);display:grid;place-items:center;box-shadow:0 0 0 3px var(--tawny),0 4px 10px rgba(12,35,64,.35);transition:opacity .25s,transform .35s}
+.box.open .lamp-q{opacity:0;transform:translate(-50%,-50%) scale(.4)}
+.prize-tag{position:absolute;left:50%;top:21%;transform:translate(-50%,-50%) scale(.5);opacity:0;z-index:3;color:var(--navy);font-family:var(--display);font-weight:700;white-space:nowrap;font-size:clamp(11px,2.2vw,15px);line-height:1;transition:transform .5s cubic-bezier(.2,1.6,.4,1) .15s,opacity .3s .15s}
+.box.open .prize-tag{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.box.chosen .prize-tag{color:var(--tawny);font-size:clamp(13px,2.6vw,18px)}
+.box.revealed{opacity:.5}
 .boxes-win:empty{display:none}
 .boxes-modal:has(.box-stage[hidden]){padding-top:48px}
 .boxes-win{max-width:520px;width:100%;margin:0 auto}
@@ -656,7 +649,7 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
     <span class="p-label">Idea</span>
     <div class="tabs" role="tablist" aria-label="Promotion idea">
       <button class="tab" role="tab" id="tab-wheel" data-idea="wheel"><span class="n">1</span>Spin<span class="lbl-long">&nbsp;the wheel</span></button>
-      <button class="tab" role="tab" id="tab-boxes" data-idea="boxes"><span class="n">2</span>Mystery<span class="lbl-long">&nbsp;boxes</span></button>
+      <button class="tab" role="tab" id="tab-boxes" data-idea="boxes"><span class="n">2</span>Mystery<span class="lbl-long">&nbsp;lamps</span></button>
       <button class="tab" role="tab" id="tab-cashback" data-idea="cashback"><span class="n">3</span>Lucky<span class="lbl-long">&nbsp;cashback</span></button>
       <button class="tab" role="tab" id="tab-popup" data-idea="popup"><span class="n">4</span>Campaign<span class="lbl-long">&nbsp;popup</span></button>
     </div>
@@ -1443,9 +1436,25 @@ function openWheel(){
 /* =========================================================
    IDEA 2 · MYSTERY BOXES
    ========================================================= */
-// One shared box style: primary-blue box, tawny ribbon (high contrast on the navy stage), white "?" badge
-const BOX_STYLE = { c:"#0072C8", c2:"#005FA8", rb:"#D25600", q:"#0072C8" };
-const BOX_COLORS = Array.from({length:6}, () => BOX_STYLE);
+// Floor lamp (one shared look): drawn in SVG, gradients are defined once per popup in LAMP_DEFS
+const LAMP_DEFS = `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="lpShadeOff" x1="0" x2="1"><stop offset="0" stop-color="#003E79"/><stop offset=".45" stop-color="#0072C8"/><stop offset=".62" stop-color="#3386D4"/><stop offset="1" stop-color="#00467f"/></linearGradient>
+  <linearGradient id="lpShadeOn" x1="0" x2="1"><stop offset="0" stop-color="#f3b45c"/><stop offset=".45" stop-color="#ffe7b8"/><stop offset=".6" stop-color="#fff8ea"/><stop offset="1" stop-color="#eaa64b"/></linearGradient>
+  <linearGradient id="lpPole" x1="0" x2="1"><stop offset="0" stop-color="#0b1626"/><stop offset=".5" stop-color="#6d87a8"/><stop offset="1" stop-color="#0b1626"/></linearGradient>
+  <linearGradient id="lpCone" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ffd896" stop-opacity=".55"/><stop offset=".55" stop-color="#ffd896" stop-opacity=".14"/><stop offset="1" stop-color="#ffd896" stop-opacity="0"/></linearGradient>
+  <radialGradient id="lpPool"><stop offset="0" stop-color="#ffd896" stop-opacity=".55"/><stop offset="1" stop-color="#ffd896" stop-opacity="0"/></radialGradient>
+</defs></svg>`;
+const LAMP_SVG = `<svg class="lamp-svg" viewBox="0 0 120 176" aria-hidden="true">
+  <polygon class="lamp-cone" points="22,64 98,64 120,170 0,170" fill="url(#lpCone)"/>
+  <ellipse class="lamp-pool" cx="60" cy="170" rx="56" ry="7" fill="url(#lpPool)"/>
+  <ellipse cx="60" cy="169" rx="22" ry="4.5" fill="#06101d"/>
+  <path d="M40 168 Q60 158 80 168 Z" fill="#163357"/>
+  <rect x="57.5" y="62" width="5" height="102" rx="2" fill="url(#lpPole)"/>
+  <path d="M18 64 L102 64 L89 10 Q60 5 31 10 Z" fill="url(#lpShadeOff)"/>
+  <path class="lamp-shade-on" d="M18 64 L102 64 L89 10 Q60 5 31 10 Z" fill="url(#lpShadeOn)" style="filter:drop-shadow(0 0 10px rgba(255,200,120,.75))"/>
+  <ellipse cx="60" cy="64" rx="42" ry="4" fill="#0b2546"/>
+  <ellipse class="lamp-bulb-on" cx="60" cy="65" rx="30" ry="3.2" fill="#fff6dc" style="filter:drop-shadow(0 0 8px #ffd58a)"/>
+</svg>`;
 let boxesState = null;
 function shuffle(a){ for (let i = a.length-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; }
 function openBoxes(){
@@ -1457,21 +1466,22 @@ function openBoxes(){
       <div class="boxes-modal">
         <div class="boxes-head" id="boxes-head">
           <span class="eyebrow">Welcome gift</span>
-          <h2 id="boxes-title">Pick a box, <em>reveal your gift</em></h2>
-          <p>Six boxes, six surprises for your first order. Choose one to open it.</p>
+          <h2 id="boxes-title">Pick a lamp, <em>light up your gift</em></h2>
+          <p>Six lamps, six surprises for your first order. Switch one on to reveal your gift.</p>
         </div>
         <div class="box-stage">
+          ${LAMP_DEFS}
           <div class="boxes" id="boxes">
-            ${boxesState.order.map((pi,i) => { const k = BOX_COLORS[i]; return `
-              <button class="box" type="button" data-i="${i}" aria-label="Open box ${i+1}" style="--c:${k.c};--c2:${k.c2};--rb:${k.rb};--q:${k.q}">
-                <span class="gift"><span class="beam"></span><span class="gift-body"><span>?</span></span><span class="lid"><span class="bow"></span><span class="lid-top"></span></span></span>
+            ${boxesState.order.map((pi,i) => `
+              <button class="box" type="button" data-i="${i}" aria-label="Switch on lamp ${i+1}">
+                ${LAMP_SVG}<span class="lamp-q">?</span>
                 <span class="prize-tag">${PRIZES[pi].short}</span>
-              </button>`; }).join("")}
+              </button>`).join("")}
           </div>
         </div>
         <div class="boxes-win" id="boxes-win"></div>
       </div>
-    </div>`, () => { if (boxesState.picked === null) showLauncher("Open your gift", openBoxes); });
+    </div>`, () => { if (boxesState.picked === null) showLauncher("Light up a gift", openBoxes); });
 
   const boxes = $$(".box", ov);
   const reveal = (i, celebrate) => {
@@ -1479,7 +1489,7 @@ function openBoxes(){
     const chosen = boxes[i]; chosen.classList.add("chosen","open");
     if (boxesState.out) chosen.classList.add("out");
     if (celebrate && !boxesState.out){ const r = chosen.getBoundingClientRect(); confetti(r.left + r.width/2, r.top + r.height/3, 140); }
-    setTimeout(() => boxes.forEach((b,j) => { if (j !== i) b.classList.add("open","revealed"); }), celebrate ? 900 : 0);
+    setTimeout(() => boxes.forEach((b,j) => { if (j !== i) b.classList.add("open","revealed"); }), celebrate ? 1000 : 0);
     setTimeout(() => {
       $("#boxes-head", ov).hidden = true; $(".box-stage", ov).hidden = true;   // swap: the popup now shows only the offer
       ov.firstElementChild.scrollTop = 0;
@@ -1487,7 +1497,7 @@ function openBoxes(){
       if (boxesState.out){ w.innerHTML = loseCard(p); wireWin(w); return; }
       const render = () => { w.innerHTML = winCard(p, { source:"boxes" }); wireWin(w, { rerender:render }); };
       render();
-    }, celebrate ? 1900 : 0);
+    }, celebrate ? 2300 : 0);
   };
   if (boxesState.picked !== null){ reveal(boxesState.picked, false); return; }
   boxes.forEach((b,i) => b.addEventListener("click", () => {
@@ -1495,8 +1505,9 @@ function openBoxes(){
     boxesState.picked = i; boxes.forEach(x => x.disabled = true);
     // Scenario: the picked prize has used up its overall quota
     if (sc.quota === "out"){ boxesState.order[i] = 0; boxesState.out = true; $(".prize-tag", b).textContent = PRIZES[0].short; }
-    b.classList.add("shake");
-    setTimeout(() => { b.classList.remove("shake"); reveal(i, true); }, reduced ? 0 : 560);
+    audio(); switchTick();                                   // click of the lamp switch, then a short flicker as it lights
+    b.classList.add("open","shake");
+    setTimeout(() => { b.classList.remove("shake"); reveal(i, true); }, reduced ? 0 : 450);
   }));
 }
 
@@ -1674,7 +1685,7 @@ syncForm();
    ========================================================= */
 const NOTES = {
   wheel:   `<b>Homepage popup.</b> 3 spins per visitor; each new spin replaces the prize and the counter dims at 3/3. Guests log in inside the popup to claim; logged-in customers get it applied at checkout. <b>Already earned</b>: a guest wins, then logs into an account that won before.`,
-  boxes:   `<b>Homepage popup.</b> Each prize has an overall campaign quota. If the picked prize has run out, the visitor gets a good-luck message instead. Guests log in inside the popup to claim. <b>Already earned</b>: a guest wins, then logs into an account that won before.`,
+  boxes:   `<b>Homepage popup · light up a lamp.</b> Each prize has an overall campaign quota. If the picked prize has run out, the visitor gets a good-luck message instead. Guests log in inside the popup to claim. <b>Already earned</b>: a guest wins, then logs into an account that won before.`,
   cashback:`<b>At checkout (Pay step).</b> A random share of orders (e.g. 1 in 100) gets the full total back as wallet cashback. It stays <b>pending</b> until order #72728 is delivered, so it can't be spent and the order then cancelled.`,
   popup:   `<b>Homepage popup, managed from the dashboard.</b> Marketing picks text &amp; button, text over a background photo, or a full creative visual, then sets copy, colours, icon, countdown, timing and audience. Open “Popup settings” to edit it live.`,
 };
