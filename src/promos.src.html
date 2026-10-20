@@ -1826,18 +1826,18 @@ function switchTick(){
 let loaderUntil = 0, loaderTimers = [];
 function playLoader(){
   // lamp off → switch click + light on (same instant) → the site appears straight away through the fade
-  const L = $("#loader"), OFF = reduced ? 150 : 800, FADE = 1000;
+  const L = $("#loader"), OFF = reduced ? 150 : 800, FADE = 1000, HOLD = 1450;   // HOLD: light stays on before the site appears
   loaderTimers.forEach(clearTimeout); loaderTimers = [];
   audio();
-  L.className = "show" + (Lamp3D ? " gl" : ""); loaderUntil = Date.now() + OFF + 450 + FADE + 100;
+  L.className = "show" + (Lamp3D ? " gl" : ""); loaderUntil = Date.now() + OFF + HOLD + FADE + 100;
   Lamp3D && Lamp3D.start();
   loaderTimers.push(setTimeout(() => {
     const lag = switchTick();                                  // sound first; light lands when the click reaches the speakers
     loaderTimers.push(setTimeout(() => {
       L.classList.add("on"); Lamp3D && Lamp3D.set("on");
       if (/holdloader/.test(location.search)){ loaderUntil = Infinity; return; }   // design review: keep the lamp on screen
-      loaderTimers.push(setTimeout(() => L.classList.add("out"), 450));
-      loaderTimers.push(setTimeout(() => { L.className = ""; Lamp3D && Lamp3D.stop(); }, 450 + FADE));
+      loaderTimers.push(setTimeout(() => L.classList.add("out"), HOLD));
+      loaderTimers.push(setTimeout(() => { L.className = ""; Lamp3D && Lamp3D.stop(); }, HOLD + FADE));
     }, lag));
   }, OFF));
 }
