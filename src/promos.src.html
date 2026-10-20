@@ -1246,12 +1246,10 @@ function winCard(p, o = {}){
     ${o.source === "wheel" ? triesBlock(o.used) : ""}
   </div>`;
 }
-function loseCard(p){
-  const q = QUOTA[PRIZES.indexOf(p)];
+function loseCard(){
   return `<div class="win lose">
-    <span class="eyebrow">Good luck next time</span>
-    <div class="win-prize">${p.title} is out of quota</div>
-    <p style="margin:0;color:var(--muted)">All ${q.total.toLocaleString("en-US")} of this campaign's ${p.title} gifts have been claimed. New boxes open tomorrow, so come back and try again.</p>
+    <div class="win-prize">Good luck next time</div>
+    <p style="margin:0;color:var(--muted)">This gift has already been claimed by other customers. New gifts light up tomorrow, so come back and try again.</p>
     <div class="win-actions"><button class="btn-blue" type="button" data-close style="width:100%">Shop Now ${ARROW}</button></div>
   </div>`;
 }
