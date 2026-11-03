@@ -420,6 +420,24 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
 .ld-logo{position:absolute;left:0;right:0;bottom:12vh;display:flex;align-items:center;justify-content:center;gap:12px;opacity:0;transform:translateY(12px);transition:opacity .6s .15s,transform .6s .15s}
 .ld-logo img{width:190px;height:auto}
 .ld-logo span{font-family:var(--body);font-weight:500;font-size:20px;color:#fff;letter-spacing:.02em}
+/* Wall light switch: the visitor turns the lamp on (this click also unlocks sound) */
+.ld-switch{position:absolute;left:50%;bottom:13vh;transform:translateX(-50%);z-index:3;border:0;background:none;padding:0;display:grid;justify-items:center;gap:16px;cursor:pointer;transition:opacity .45s ease,transform .45s ease}
+.ld-switch:focus-visible{outline:none}
+.ld-switch:focus-visible .ld-plate{box-shadow:0 0 0 3px var(--blue-80),0 14px 34px rgba(0,0,0,.6)}
+#loader.on .ld-switch{opacity:0;transform:translateX(-50%) translateY(10px);pointer-events:none}
+.ld-plate{position:relative;width:84px;height:126px;border-radius:16px;background:linear-gradient(155deg,#ffffff,#dfe3e9 70%,#cfd5dd);box-shadow:0 14px 34px rgba(0,0,0,.6),inset 0 1px 0 #fff,inset 0 -3px 5px rgba(0,0,0,.12);display:grid;place-items:center;perspective:240px;transition:transform .2s}
+.ld-switch:hover .ld-plate{transform:scale(1.04)}
+.ld-plate::before,.ld-plate::after{content:"";position:absolute;left:50%;width:7px;height:7px;margin-left:-3.5px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,#9aa3ae)}
+.ld-plate::before{top:9px}.ld-plate::after{bottom:9px}
+.ld-rocker{position:relative;width:46px;height:76px;border-radius:9px;background:linear-gradient(#ffffff 0%,#eef0f3 48%,#c8ced6 52%,#e9ecf0 100%);box-shadow:0 4px 8px rgba(0,0,0,.28),inset 0 1px 0 #fff;transform:rotateX(16deg);transition:transform .12s ease-out,background .12s}
+.ld-rocker::after{content:"";position:absolute;left:50%;top:12px;width:7px;height:7px;margin-left:-3.5px;border-radius:50%;background:#ff8a3d;box-shadow:0 0 8px 2px rgba(255,138,61,.8);animation:swGlow 1.6s ease-in-out infinite}
+@keyframes swGlow{50%{opacity:.35}}
+.ld-switch.flipped .ld-rocker{transform:rotateX(-16deg);background:linear-gradient(#e9ecf0 0%,#c8ced6 48%,#eef0f3 52%,#ffffff 100%)}
+.ld-switch.flipped .ld-rocker::after{animation:none;background:#9aa3ae;box-shadow:none}
+.ld-hint{font-family:var(--body);font-weight:500;font-size:14px;letter-spacing:.03em;color:rgba(255,255,255,.85);animation:swHint 2.2s ease-in-out infinite}
+.ld-hint[lang="ar"]{font-family:"Alexandria","Noto Kufi Arabic",sans-serif;letter-spacing:0;font-size:15px}
+@keyframes swHint{50%{opacity:.5}}
+#loader[data-lang="ar"] .ld-hint[lang="en"],#loader:not([data-lang="ar"]) .ld-hint[lang="ar"]{display:none}
 #loader.on .ld-logo{opacity:1;transform:none;transition:opacity .55s cubic-bezier(.25,1,.5,1) .1s,transform .55s cubic-bezier(.25,1,.5,1) .1s}
 /* Arabic tagline revealed right-to-left as the light comes on */
 /* Tagline: Sirage wordmarks (white artwork) with matching type — Alexandria for Arabic, Montserrat for English */
@@ -700,6 +718,11 @@ h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:0;te
   </div>
   <p class="ld-tag" dir="rtl" lang="ar"><span>نورها مع</span><img src="assets/sirage-ar-white.svg" alt="سراج"></p>
   <p class="ld-tag ld-tag-en" lang="en"><span>Light it with</span><img src="assets/sirage-en-white.svg" alt="SIRAGE"></p>
+  <button class="ld-switch" id="ld-switch" type="button" aria-label="Switch on the light">
+    <span class="ld-plate"><span class="ld-rocker"></span></span>
+    <span class="ld-hint" lang="en">Tap the switch to light it up</span>
+    <span class="ld-hint" lang="ar" dir="rtl">اضغط المفتاح لتشغيل النور</span>
+  </button>
   <div class="ld-logo"><span>by</span><img src="assets/logo-white.svg" alt="Smart Light"></div>
 </div>
 
@@ -1842,24 +1865,32 @@ function switchTick(){
   return ((a.outputLatency || 0) + (a.baseLatency || 0)) * 1000 + 10;
 }
 
-let loaderUntil = 0, loaderTimers = [];
+let loaderTimers = [], afterLoader = [];
+const loaderActive = () => $("#loader").classList.contains("show");
+// Run once the site has opened (entry popups wait for the intro)
+function whenLoaderDone(fn){ loaderActive() ? afterLoader.push(fn) : fn(); }
 function playLoader(){
-  // lamp off → switch click + light on (same instant) → the site appears straight away through the fade
-  const L = $("#loader"), OFF = reduced ? 150 : 800, FADE = 1000, HOLD = 1450;   // HOLD: light stays on before the site appears
-  loaderTimers.forEach(clearTimeout); loaderTimers = [];
-  audio();
+  // lamp off + wall switch → visitor presses it (unlocks sound) → click + light eases on → site opens
+  const L = $("#loader"), sw = $("#ld-switch"), FADE = 1000, HOLD = 1450;   // HOLD: light stays on before the site appears
+  loaderTimers.forEach(clearTimeout); loaderTimers = []; afterLoader = [];
   L.dataset.lang = sc.lang;
-  L.className = "show" + (Lamp3D ? " gl" : ""); loaderUntil = Date.now() + OFF + HOLD + FADE + 100;
+  L.className = "show" + (Lamp3D ? " gl" : "");
   Lamp3D && Lamp3D.start();
-  loaderTimers.push(setTimeout(() => {
-    const lag = switchTick();                                  // sound first; light lands when the click reaches the speakers
+  sw.classList.remove("flipped"); sw.disabled = false;
+  sw.onclick = () => {
+    if (sw.disabled) return;
+    sw.disabled = true; sw.classList.add("flipped");
+    audio(); const lag = switchTick();                       // the press itself is the gesture browsers need for sound
     loaderTimers.push(setTimeout(() => {
       L.classList.add("on"); Lamp3D && Lamp3D.set("on");
-      if (/holdloader/.test(location.search)){ loaderUntil = Infinity; return; }   // design review: keep the lamp on screen
+      if (/holdloader/.test(location.search)) return;          // design review: keep the lamp on screen
       loaderTimers.push(setTimeout(() => L.classList.add("out"), HOLD));
-      loaderTimers.push(setTimeout(() => { L.className = ""; Lamp3D && Lamp3D.stop(); }, HOLD + FADE));
+      loaderTimers.push(setTimeout(() => {
+        L.className = ""; Lamp3D && Lamp3D.stop();
+        const run = afterLoader; afterLoader = []; run.forEach(f => f());
+      }, HOLD + FADE));
     }, lag));
-  }, OFF));
+  };
 }
 
 function setIdea(next, fresh){
@@ -1881,8 +1912,8 @@ function setIdea(next, fresh){
   scrollTo({top:0, behavior: reduced ? "auto" : "smooth"});
   if (idea === "home") return;
   requestAnimationFrame(drawPattern);
-  const delay = Math.max(idea === "popup" ? Math.max(500, (+camp.delay||0)*1000) : 900, loaderUntil - Date.now() + 300);
-  if (idea !== "cashback") entryTimer = setTimeout(() => ({wheel:openWheel, boxes:openBoxes, popup:openCamp})[idea](), delay);
+  const delay = idea === "popup" ? Math.max(500, (+camp.delay||0)*1000) : 900;
+  if (idea !== "cashback"){ afterLoader = []; whenLoaderDone(() => { entryTimer = setTimeout(() => ({wheel:openWheel, boxes:openBoxes, popup:openCamp})[idea](), delay); }); }
 }
 $$(".tab").forEach(t => t.addEventListener("click", () => setIdea(t.dataset.idea, true)));
 $("#lang-label").textContent = sc.lang === "ar" ? "Browse in English" : "تصفح بالعربية";
