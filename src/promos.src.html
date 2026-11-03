@@ -1869,13 +1869,13 @@ const loaderActive = () => $("#loader").classList.contains("show");
 function whenLoaderDone(fn){ loaderActive() ? afterLoader.push(fn) : fn(); }
 function playLoader(){
   // lamp off + wall switch → visitor presses it (unlocks sound) → click + light eases on → site opens
-  const L = $("#loader"), sw = $("#ld-switch"), FADE = 1000, HOLD = 1450;   // HOLD: light stays on before the site appears
+  const L = $("#loader"), sw = $("#ld-switch"), FADE = 1000, HOLD = 1450, AUTO_ON = 8000;   // HOLD: light stays on before the site appears
   loaderTimers.forEach(clearTimeout); loaderTimers = []; afterLoader = [];
   L.dataset.lang = sc.lang;
   L.className = "show" + (Lamp3D ? " gl" : "");
   Lamp3D && Lamp3D.start();
   sw.classList.remove("flipped"); sw.disabled = false;
-  sw.onclick = () => {
+  const press = () => {
     if (sw.disabled) return;
     sw.disabled = true; sw.classList.add("flipped");
     audio(); const lag = switchTick();                       // the press itself is the gesture browsers need for sound
@@ -1889,6 +1889,9 @@ function playLoader(){
       }, HOLD + FADE));
     }, lag));
   };
+  sw.onclick = press;
+  // No press within 8s: switch on by itself and enter (silent, since browsers block sound without a click)
+  if (!/holdswitch/.test(location.search)) loaderTimers.push(setTimeout(press, AUTO_ON));
 }
 
 function setIdea(next, fresh){
